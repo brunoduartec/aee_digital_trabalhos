@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+    db_trabalhos:
+        image: mysql:5.7
+        container_name: db_trabalhos
+        volumes:
+          - ./.mysql-data/db:/var/lib/mysql
+        restart: always
+        ports:
+          - 3306:3306
+        expose:
+          - 3306
+        environment:
+          MYSQL_ROOT_PASSWORD: aeepw
+          MYSQL_DATABASE: aee
+          MYSQL_USER: aee
+          MYSQL_PASSWORD: aeepw
+        networks:
+            - app-network
+    adminer_trabalhos:
+        image: adminer
+        container_name: adminer_trabalhos
+        ports:
+            - 8080:8080
+        networks:
+            - app-network
+    trabalhos:
+        build: .
+        command: npm start
+        image: aee_digital_trbalhos
+        container_name: app
+        ports:
+            - "3100:3100"
+        volumes:
+            - .:/usr/app
+        networks:
+            - app-network
+        depends_on:
+            - "db_trabalhos"
+networks:
+    app-network:
+        driver: bridge
