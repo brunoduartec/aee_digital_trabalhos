@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "97d682b5-136e-4ead-8863-5439f5f10a67",
-		"name": "AEE",
+		"_postman_id": "e08dd077-8c7a-4e7c-8df2-fef41bcf7ada",
+		"name": "AEE TRABALHOS",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -11,19 +11,27 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "{{address_trabalhos}}/api/v1/healthcheck",
+					"host": [
+						"{{address_trabalhos}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"healthcheck"
+					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Add Centro",
+			"name": "Add Atividade",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"NOME_CENTRO\": \"{{Nome da Casa Espírita}}\",\n  \"CNPJ_CENTRO\": \"TEMP\",\n  \"DATA_FUNDACAO\": \"1/1/2000\",\n  \"ENDERECO\": \"{{Endereço}}\",\n  \"CEP\": \"{{CEP}}\",\n  \"BAIRRO\": \"{{Bairro}}\",\n  \"CIDADE\": \"{{Cidade}}\",\n  \"ESTADO\": \"{{Estado}}\",\n  \"PAIS\": \"{{Pais}}\",\n  \"NOME_REGIONAL\": \"{{Regional}}\"\n}",
+					"raw": "{\n  \"NOME_ATIVIDADE\": \"{{Nome da Atividade}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,21 +39,21 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/centros",
+					"raw": "{{address_trabalhos}}/api/v1/atividades",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"centros"
+						"atividades"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete Centro",
+			"name": "Delete Atividade",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -59,14 +67,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/centros/10",
+					"raw": "{{address_trabalhos}}/api/v1/atividades/10",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"centros",
+						"atividades",
 						"10"
 					]
 				}
@@ -74,7 +82,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Centro",
+			"name": "Get Atividade",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -91,28 +99,27 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/api/centros",
-					"protocol": "http",
+					"raw": "{{address_trabalhos}}/api/v1/atividades",
 					"host": [
-						"localhost"
+						"{{address_trabalhos}}"
 					],
-					"port": "3000",
 					"path": [
 						"api",
-						"centros"
+						"v1",
+						"atividades"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Edit Centro",
+			"name": "Edit Atividade",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"nome\": \"Ana Paula\",\n\t\"cpf\": \"31581653840\"\n}",
+					"raw": "{\n\t\"NOME_ATIVIDADE\": \"AEE\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -120,14 +127,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/centros/8",
+					"raw": "{{address_trabalhos}}/api/v1/atividades/8",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"centros",
+						"atividades",
 						"8"
 					]
 				}
@@ -135,13 +142,13 @@
 			"response": []
 		},
 		{
-			"name": "Add Regional",
+			"name": "Add Atividade_Centro",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"NOME_REGIONAL\": \"{{NOME_REGIONAL}}\",\n  \"PAIS\": \"BRASIL\"\n}",
+					"raw": "{\n    \"ID_CENTRO\": \"\",\n    \"ID_ATIVIDADE\": \"\",\n    \"HORINI\": \"\",\n    \"HORFIM\": \"\",\n    \"DIA_SEMANA\": \"\",\n    \"NUMERO_TURMA\": \"\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -149,21 +156,21 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/regionais",
+					"raw": "{{address_trabalhos}}/api/v1/atividades_centro",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"regionais"
+						"atividades_centro"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get Regional",
+			"name": "Get Atividade_Centro",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -180,21 +187,21 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/regionais",
+					"raw": "{{address_trabalhos}}/api/v1/atividades_centro",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"regionais"
+						"atividades_centro"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Delete Regional",
+			"name": "Delete Atividade_Centro",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -208,14 +215,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/centros/10",
+					"raw": "{{address_trabalhos}}/api/v1/atividades_centro/10",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"centros",
+						"atividades_centro",
 						"10"
 					]
 				}
@@ -223,13 +230,13 @@
 			"response": []
 		},
 		{
-			"name": "Edit Regional",
+			"name": "Edit Atividade_Centro",
 			"request": {
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"nome\": \"Ana Paula\",\n\t\"cpf\": \"31581653840\"\n}",
+					"raw": "{\n    \"ID_CENTRO\": \"\",\n    \"ID_ATIVIDADE\": \"\",\n    \"HORINI\": \"\",\n    \"HORFIM\": \"\",\n    \"DIA_SEMANA\": \"\",\n    \"NUMERO_TURMA\": \"\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -237,14 +244,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{address}}/api/v1/centros/8",
+					"raw": "{{address_trabalhos}}/api/v1/atividades_centro/8",
 					"host": [
-						"{{address}}"
+						"{{address_trabalhos}}"
 					],
 					"path": [
 						"api",
 						"v1",
-						"centros",
+						"atividades_centro",
 						"8"
 					]
 				}
@@ -256,7 +263,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "df974084-6885-477d-96f6-2bb060fbf88b",
+				"id": "edf5e45f-b9cd-4947-a0da-05386361c49e",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -266,7 +273,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "787575a0-ca63-4b83-9c0c-023d6263cc7d",
+				"id": "a4574bd6-374a-4cf4-801c-b3a9b5b55a1e",
 				"type": "text/javascript",
 				"exec": [
 					""
