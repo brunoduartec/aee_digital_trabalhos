@@ -1,9 +1,9 @@
 version: "3"
 
 services:
-    db_trabalhos:
+    db:
         image: mysql:5.7
-        container_name: db_trabalhos
+        container_name: db
         volumes:
           - ./.mysql-data/db:/var/lib/mysql
         restart: always
@@ -18,9 +18,9 @@ services:
           MYSQL_PASSWORD: aeepw
         networks:
             - app-network
-    adminer_trabalhos:
+    adminer:
         image: adminer
-        container_name: adminer_trabalhos
+        container_name: adminer
         ports:
             - 8080:8080
         networks:
@@ -37,7 +37,7 @@ services:
         networks:
             - app-network
         depends_on:
-            - "db_trabalhos"
+            - "db"
 networks:
     app-network:
         driver: bridge

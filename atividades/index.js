@@ -6,8 +6,8 @@ const database = makeDb()
 const atividadeList = makeAtividadeList({
     database
 })
-const contactsEndpointHandler = makeAtividadeEndpointHandler({
+const atividadesEndpointHandler = makeAtividadeEndpointHandler({
     atividadeList
 })
 
-module.exports = contactsEndpointHandler
+module.exports = atividadesEndpointHandler

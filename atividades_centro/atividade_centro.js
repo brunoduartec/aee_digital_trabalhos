@@ -13,15 +13,14 @@ module.exports = function makeAtividadeCentro(
     return Object.freeze(normalAtividadeCentro)
 
     function validate({
-        ID_ATIVIDADE_CENTRO = requiredParam('ID_ATIVIDADE_CENTRO'),
         ID_CENTRO = requiredParam('ID_CENTRO'),
         ID_ATIVIDADE = requiredParam('ID_ATIVIDADE'),
+        DIA_SEMANA = requiredParam('DIA_SEMANA'),
         ...otherInfo
     } = {}) {
         validateDiaDaSemana(DIA_SEMANA)
 
         return {
-            NOME_ATIVIDADE,
             ...otherInfo
         }
     }
