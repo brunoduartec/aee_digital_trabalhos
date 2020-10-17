@@ -23,16 +23,21 @@ module.exports = function makeAtividadeList({
         return await database.add("ATIVIDADES", atividade)
     }
     async function findById({
-        atividadeId
+        atividadeId,
+        max,
+        searchParam,
+        searchValue
     }) {
         const params = ["ID_ATIVIDADE", "NOME_ATIVIDADE"]
         return await database.findById("ATIVIDADES", params, {
             ID_ATIVIDADE: atividadeId
-        })
+        },max, searchParam, searchValue)
     }
-    async function getItems() {
+    async function getItems({
+        max
+    }) {
         const params = ["ID_ATIVIDADE", "NOME_ATIVIDADE"]
-        return await database.getItems("ATIVIDADES", params);
+        return await database.getItems("ATIVIDADES", params, max);
     }
     async function remove({
         atividadeId

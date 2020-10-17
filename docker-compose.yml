@@ -28,7 +28,7 @@ services:
     trabalhos:
         build: .
         command: npm start
-        image: aee_digital_trbalhos
+        image: aee_digital_trabalhos
         container_name: app
         ports:
             - "3100:3100"

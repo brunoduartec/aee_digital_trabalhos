@@ -38,11 +38,25 @@ module.exports = function makeAtividadeEndpointHandler({
             id
         } = httpRequest.pathParams || {}
         const {
-            max
+            max,
+            searchParam,
+            searchValue
         } = httpRequest.queryParams || {}
 
-        const result = id ? await atividadeList.findById({
-            atividadeId: id
+        let hasQuery = function (id, searchParam, searchValue) {
+            return id || (searchParam && searchValue)
+        }
+        let searchParamConverted
+        if (searchParam) {
+            searchParamConverted = Number(searchParam)
+            searchParamConverted = convertSearchParam(searchParamConverted);
+        }
+
+        const result = hasQuery(id, searchParamConverted, searchValue) ? await atividadeList.findById({
+            atividadeId: id,
+            max,
+            searchParam: searchParamConverted,
+            searchValue
         }) : await atividadeList.getItems({
             max
         })
@@ -157,6 +171,15 @@ module.exports = function makeAtividadeEndpointHandler({
                     400 : 500
             })
         }
+    }
+
+    function convertSearchParam(searchParam) {
+        switch (searchParam) {
+            case (1):
+                return "NOME_ATIVIDADE";
+            default:
+                return null;
+        };
     }
 
 }
