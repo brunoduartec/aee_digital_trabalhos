@@ -173,10 +173,15 @@ module.exports = function makeAtividadeEndpointHandler({
         }
     }
 
+
+
     function convertSearchParam(searchParam) {
         switch (searchParam) {
             case (1):
-                return "NOME_ATIVIDADE";
+                return {
+                    "param":"NOME_ATIVIDADE",
+                    "type": "like"
+                }
             default:
                 return null;
         };

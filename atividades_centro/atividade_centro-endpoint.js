@@ -182,7 +182,7 @@ module.exports = function makeAtividadeCentroEndpointHandler({
             case (2):
                 return {
                     "param":"ID_CENTRO",
-                    "type": "like"
+                    "type": "="
                 }
             default:
                 return null;
