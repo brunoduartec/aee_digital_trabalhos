@@ -84,7 +84,7 @@ module.exports = function makeDb() {
         query += (" From " + table + " WHERE ")
 
         if (searchParam) {
-            query += `${searchParam} LIKE '%${searchValue}%';`
+            query += `${searchParam.param} ${searchParam.type} '%${searchValue}%';`
         } else {
             query += (setConditionQueryPart(conditions));
         }

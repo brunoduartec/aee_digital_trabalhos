@@ -23,12 +23,15 @@ module.exports = function makeAtividadeCentroList({
         return await database.add("ATIVIDADES_CENTRO", atividade)
     }
     async function findById({
-        atividadeCentroId
+        atividadeCentroId,
+        max,
+        searchParam,
+        searchValue
     }) {
         const params = ["ID_ATIVIDADE_CENTRO", "ID_CENTRO", "ID_ATIVIDADE", "HORINI", "HORFIM", "DIA_SEMANA", "NUMERO_TURMA"]
         return await database.findById("ATIVIDADES_CENTRO", params, {
             ID_ATIVIDADE_CENTRO: atividadeCentroId
-        })
+        },max, searchParam, searchValue)
     }
     async function getItems() {
         const params = ["ID_ATIVIDADE_CENTRO", "ID_CENTRO", "ID_ATIVIDADE", "HORINI", "HORFIM", "DIA_SEMANA", "NUMERO_TURMA"]

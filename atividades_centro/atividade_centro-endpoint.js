@@ -38,11 +38,25 @@ module.exports = function makeAtividadeCentroEndpointHandler({
             id
         } = httpRequest.pathParams || {}
         const {
-            max
+            max,
+            searchParam,
+            searchValue
         } = httpRequest.queryParams || {}
 
-        const result = id ? await atividadeCentroList.findById({
-            atividadeCentroId: id
+        let hasQuery = function (id, searchParam, searchValue) {
+            return id || (searchParam && searchValue)
+        }
+        let searchParamConverted
+        if (searchParam) {
+            searchParamConverted = Number(searchParam)
+            searchParamConverted = convertSearchParam(searchParamConverted);
+        }
+
+        const result = hasQuery(id, searchParamConverted, searchValue) ? await atividadeCentroList.findById({
+            atividadeCentroId: id,
+            max,
+            searchParam: searchParamConverted,
+            searchValue
         }) : await atividadeCentroList.getItems({
             max
         })
@@ -157,6 +171,22 @@ module.exports = function makeAtividadeCentroEndpointHandler({
                     400 : 500
             })
         }
+    }
+    function convertSearchParam(searchParam) {
+        switch (searchParam) {
+            case (1):
+                return {
+                    "param":"ID_ATIVIDADE",
+                    "type": "="
+                }
+            case (2):
+                return {
+                    "param":"ID_CENTRO",
+                    "type": "like"
+                }
+            default:
+                return null;
+        };
     }
 
 }
