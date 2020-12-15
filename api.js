@@ -41,6 +41,14 @@ app.use('/api/v1/atividades/:id', atividadeController);
 app.all('/api/v1/atividades_centro', atividadeCentroController)
 app.use('/api/v1/atividades_centro/:id', atividadeCentroController);
 
+app.get('/api/v1/boostrap', function (req, res) {
+    const setup = require("./db/setup")
+
+    setup.bootstrap();
+
+    res.status(200).send("Tabelas Iniciadas")
+})
+
 swaggerDoc(app);
 
 

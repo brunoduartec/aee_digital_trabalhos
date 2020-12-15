@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-module.exports.bootstrap = function () {
+function bootstrap() {
     let rl = readline.createInterface({
         input: fs.createReadStream('banco_alianca.sql'),
         terminal: false
@@ -19,4 +19,8 @@ module.exports.bootstrap = function () {
             if (err) console.log(err);
         });
     });
+}
+
+module.exports = {
+    bootstrap
 }
