@@ -1,149 +1,98 @@
-const Database = require('../helpers/Database')
+module.exports = function makeDb(ModelFactory) {
+  return Object.freeze({
+    add,
+    findByItems,
+    getItems,
+    remove,
+    replace,
+    update,
+  });
 
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "development";
-const config = require('../env.json')[env]
+  function formatParams(searchParams) {
+    let items = Object.keys(searchParams);
+    let values = Object.values(searchParams);
 
-const database = new Database(config.mysql).getInstance();
+    searchParams = {};
+    for (let index = 0; index < items.length; index++) {
+      const item = items[index];
+      const value = values[index];
+      if (item == "ID") {
+        item = "_id";
+      }
 
-const setup = require('./setup')
-exports.setup = setup.bootstrap
-
-module.exports = function makeDb() {
-    return Object.freeze({
-        add,
-        findById,
-        getItems,
-        remove,
-        replace,
-        update
-    })
-
-    function setConditionQueryPart(conditions) {
-        let query = ""
-        let conditionKeysToAdd = Object.keys(conditions)
-        let conditionValuesToAdd = Object.values(conditions)
-
-        for (let index = 0; index < conditionKeysToAdd.length; index++) {
-            const param = conditionKeysToAdd[index];
-            const condition = conditionValuesToAdd[index];
-
-            const typeOfCondition = typeof condition;
-            if (typeOfCondition == "string") {
-                query += (param + "= '" + condition + "'")
-            } else {
-                query += (param + "= " + condition)
-            }
-        }
-
-        return query
+      if (item.toLocaleLowerCase().includes("_id")) {
+        searchParams[item] = { value };
+      } else {
+        searchParams[item] = { $regex: value };
+      }
     }
 
-    async function add(table, values) {
-        let keysToAdd = Object.keys(values)
-        let valuesToAdd = Object.values(values)
+    return searchParams;
+  }
 
-        let query = "INSERT INTO " + table + "(";
+  async function add(modelName, pessoaInfo) {
+    try {
+      const Model = ModelFactory.getModel(modelName);
+      pessoa = new Model(pessoaInfo);
 
-        for (let index = 0; index < keysToAdd.length; index++) {
-            const param = keysToAdd[index];
-            query += (param + ",")
-        }
-
-        //removes the last comma
-        query = query.substring(0, query.length - 1);
-
-        query += ") VALUES ("
-
-        for (let index = 0; index < valuesToAdd.length; index++) {
-            const value = valuesToAdd[index];
-            const typeOfValue = typeof value;
-            if (typeOfValue == "string") {
-                query += ("'" + value + "',")
-            } else {
-                query += (value + ",")
-            }
-        }
-
-        //removes the last comma
-        query = query.substring(0, query.length - 1);
-
-        query += ")"
-
-        return await database.query(query);
+      await pessoa.save();
+    } catch (error) {
+      throw error;
     }
-    async function findById(table, params, conditions, max, searchParam, searchValue) {
-        let query = 'SELECT ';
+  }
+  async function findByItems(modelName, max, params) {
+    try {
+      const Model = ModelFactory.getModel(modelName);
+      params = formatParams(params);
+      let item = await Model.findOne(params);
 
-        for (let index = 0; index < params.length; index++) {
-            const param = params[index];
-            query += (param + ",")
-        }
-
-        //removes the last comma
-        query = query.substring(0, query.length - 1);
-        query += (" From " + table + " WHERE ")
-
-        if (searchParam) {
-            if(searchParam.type == "="){
-                query += `${searchParam.param} ${searchParam.type} '${searchValue}';`
-            }else{
-                query += `${searchParam.param} ${searchParam.type} '%${searchValue}%';`    
-            }
-        } else {
-            query += (setConditionQueryPart(conditions));
-        }
-        let ret = await database.query(query);
-
-        return ret
+      return item;
+    } catch (error) {
+      throw error;
     }
-    async function getItems(table, params, max, search) {
-        let query = 'SELECT ';
+  }
+  async function getItems(modelName, max) {
+    try {
+      const Model = ModelFactory.getModel(modelName);
+      let items = await Model.find();
 
-        for (let index = 0; index < params.length; index++) {
-            const param = params[index];
-            query += (param + ",")
-        }
-
-        //removes the last comma
-        query = query.substring(0, query.length - 1);
-
-        query += (" From " + table)
-
-        return await database.query(query);
+      if (items.length > 0) {
+        return items;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      throw error;
     }
-    async function remove(table, conditions) {
-        let query = "DELETE FROM " + table + " WHERE "
-        query += (setConditionQueryPart(conditions));
-
-        return await database.query(query);
+  }
+  async function remove(modelName, conditions) {
+    try {
+      const Model = ModelFactory.getModel(modelName);
+      conditions = formatParams(conditions);
+      const result = await Model.deleteOne(conditions);
+      return result;
+    } catch (error) {
+      throw error;
     }
-    async function replace(table, values, conditions) {
-        await remove(table, conditions)
-        await add(table, values)
+  }
+  async function replace(modelName, item, conditions) {
+    try {
+      const Model = ModelFactory.getModel(modelName);
+      conditions = formatParams(conditions);
+      const result = await Model.replaceOne(conditions, item);
+      return result;
+    } catch (error) {
+      throw error;
     }
-    async function update(table, values, conditions) {
-        let keysToAdd = Object.keys(values)
-        let valuesToAdd = Object.values(values)
-
-        let query = "UPDATE " + table + " SET";
-
-        for (let index = 0; index < keysToAdd.length; index++) {
-            const param = keysToAdd[index];
-            const value = valuesToAdd[index];
-
-            const typeOfValue = typeof value;
-            if (typeOfValue == "string") {
-                query += (" " + param + " = '" + value + "',")
-            } else {
-                query += (" " + param + " = " + value + ",")
-            }
-        }
-
-        //removes the last comma
-        query = query.substring(0, query.length - 1);
-
-        query += ("  WHERE ");
-        query += (setConditionQueryPart(conditions));
-        return await database.query(query);
+  }
+  async function update(modelName, item, conditions) {
+    try {
+      const Model = ModelFactory.getModel(modelName);
+      conditions = formatParams(conditions);
+      const result = await Model.updateOne(conditions, item);
+      return result;
+    } catch (error) {
+      throw error;
     }
-}
+  }
+};

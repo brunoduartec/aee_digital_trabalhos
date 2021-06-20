@@ -1,285 +1,223 @@
 {
-	"info": {
-		"_postman_id": "e08dd077-8c7a-4e7c-8df2-fef41bcf7ada",
-		"name": "AEE TRABALHOS",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Check Healthcheck",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/healthcheck",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"healthcheck"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Atividade",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"NOME_ATIVIDADE\": \"{{Nome da Atividade}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Atividade",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades/10",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades",
-						"10"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Atividade",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Edit Atividade",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"NOME_ATIVIDADE\": \"AEE\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades/8",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades",
-						"8"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Atividade_Centro",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"ID_CENTRO\": \"\",\n    \"ID_ATIVIDADE\": \"\",\n    \"HORINI\": \"\",\n    \"HORFIM\": \"\",\n    \"DIA_SEMANA\": \"\",\n    \"NUMERO_TURMA\": \"\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades_centro",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades_centro"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Atividade_Centro",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades_centro",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades_centro"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Atividade_Centro",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades_centro/10",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades_centro",
-						"10"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Edit Atividade_Centro",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"ID_CENTRO\": \"\",\n    \"ID_ATIVIDADE\": \"\",\n    \"HORINI\": \"\",\n    \"HORFIM\": \"\",\n    \"DIA_SEMANA\": \"\",\n    \"NUMERO_TURMA\": \"\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{address_trabalhos}}/api/v1/atividades_centro/8",
-					"host": [
-						"{{address_trabalhos}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"atividades_centro",
-						"8"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"id": "edf5e45f-b9cd-4947-a0da-05386361c49e",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"id": "a4574bd6-374a-4cf4-801c-b3a9b5b55a1e",
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"protocolProfileBehavior": {}
+  "info": {
+    "_postman_id": "e08dd077-8c7a-4e7c-8df2-fef41bcf7ada",
+    "name": "AEE TRABALHOS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Check Healthcheck",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/healthcheck",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "healthcheck"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Atividade",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"NOME_ATIVIDADE\": \"{{Nome da Atividade}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Atividade",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades/10",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades", "10"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Atividade",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edit Atividade",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"NOME_ATIVIDADE\": \"AEE\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades/8",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades", "8"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add Atividade_Centro",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"CENTRO_ID\": \"\",\n    \"ATIVIDADE_ID\": \"\",\n    \"HORINI\": \"\",\n    \"HORFIM\": \"\",\n    \"DIA_SEMANA\": \"\",\n    \"NUMERO_TURMA\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades_centro",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades_centro"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Atividade_Centro",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades_centro",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades_centro"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Atividade_Centro",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades_centro/10",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades_centro", "10"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edit Atividade_Centro",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"CENTRO_ID\": \"\",\n    \"ATIVIDADE_ID\": \"\",\n    \"HORINI\": \"\",\n    \"HORFIM\": \"\",\n    \"DIA_SEMANA\": \"\",\n    \"NUMERO_TURMA\": \"\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{address_trabalhos}}/api/v1/atividades_centro/8",
+          "host": ["{{address_trabalhos}}"],
+          "path": ["api", "v1", "atividades_centro", "8"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "edf5e45f-b9cd-4947-a0da-05386361c49e",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "a4574bd6-374a-4cf4-801c-b3a9b5b55a1e",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "protocolProfileBehavior": {}
 }
