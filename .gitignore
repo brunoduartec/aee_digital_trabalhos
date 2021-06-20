@@ -92,6 +92,4 @@ typings/
 .dynamodb/
 
 # End of https://www.toptal.com/developers/gitignore/api/node
-.mysql-data\db
-.mysql-data*
-.mysql-data\*
+data
