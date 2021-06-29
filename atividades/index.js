@@ -1,13 +1,15 @@
-const makeDb = require('../db')
-const makeAtividadeList = require('./atividade-list')
-const makeAtividadeEndpointHandler = require('./atividade-endpoint')
+const makeDb = require("../db");
+const makeAtividadeList = require("./atividade-list");
+const makeAtividadeEndpointHandler = require("./atividade-endpoint");
 
-const database = makeDb()
+let ModelFactory = require("../db/modelFactory");
+const database = makeDb(ModelFactory);
+
 const atividadeList = makeAtividadeList({
-    database
-})
+  database,
+});
 const atividadesEndpointHandler = makeAtividadeEndpointHandler({
-    atividadeList
-})
+  atividadeList,
+});
 
-module.exports = atividadesEndpointHandler
+module.exports = atividadesEndpointHandler;

@@ -1,41 +1,32 @@
 version: "3"
 
 services:
-    db:
-        image: mysql:5.7
-        volumes:
-          - ./.mysql-data/db:/var/lib/mysql
-        restart: always
-        ports:
-          - 3306:3306
-        expose:
-          - 3306
-        environment:
-          MYSQL_ROOT_PASSWORD: aeepw
-          MYSQL_DATABASE: aee
-          MYSQL_USER: aee
-          MYSQL_PASSWORD: aeepw
-        networks:
-            - aee_digital_trabalhos-network
-    adminer:
-        image: adminer
-        ports:
-            - 8080:8080
-        networks:
-            - aee_digital_trabalhos-network
-    trabalhos:
-        build: .
-        command: npm start
-        image: aee_digital_trabalhos
-        ports:
-            - "3100:3100"
-        volumes:
-            - .:/usr/app
-        networks:
-            - aee_digital_trabalhos-network
-        depends_on:
-            - "db"
-        tty: true
-networks:
-    aee_digital_trabalhos-network:
-        driver: bridge
+  aee_digital_trabalhos:
+    build: .
+    command: npm start
+    image: aee_digital_trabalhos
+    ports:
+      - "3100:3100"
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - "mongo"
+    links:
+      - mongo
+    tty: true
+  mongo:
+    image: mongo
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - "3110:27017"
+  mongo-express:
+    image: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+    depends_on:
+      - mongo
+    ports:
+      - "30100:8081"
+    restart: always

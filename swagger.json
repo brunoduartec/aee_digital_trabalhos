@@ -1,230 +1,242 @@
 {
-    "info": {
-        "title": "Aliança Digital",
-        "version": "1.0.0",
-        "description": "Api do Aliança Digital"
-    },
-    "host": "162.214.123.133:3000",
-    "basePath": "/",
-    "swagger": "2.0",
-    "paths": {
-        "/api/v1/atividades": {
-            "get": {
-                "summary": "Retorna uma lista de atividades.",
-                "produces": ["application/json", "application/xml"],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "post": {
-                "summary": "Adiciona uma atividade dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "List of atividade object",
-                    "required": true,
-                    "schema": {
-                        "$ref": "#/definitions/Atividade"
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-
-            }
-        },
-        "/api/v1/atividades/{id}": {
-            "get": {
-                "summary": "Retorna uma atividade dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id da atividade",
-                    "required": true,
-                    "type": "integer"
-                }],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Remove uma atividade dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id da atividade",
-                    "required": true,
-                    "type": "integer"
-                }],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "put": {
-                "summary": "Atualiza uma atividade dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                        "name": "id",
-                        "in": "query",
-                        "description": "Id da atividade",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Campos de entrada da atividade",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Atividade"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
-        },
-        "/api/v1/atividades_centro": {
-            "get": {
-                "summary": "Retorna uma lista de atividades do centro.",
-                "produces": ["application/json", "application/xml"],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "post": {
-                "summary": "Adiciona uma atividade ao centro dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "List of atividade object",
-                    "required": true,
-                    "schema": {
-                        "$ref": "#/definitions/Atividade Centro"
-                    }
-                }],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-
-            }
-        },
-        "/api/v1/atividades_centro/{id}": {
-            "get": {
-                "summary": "Retorna uma atividade do centro dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id da atividade do centro",
-                    "required": true,
-                    "type": "integer"
-                }],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "delete": {
-                "summary": "Remove uma atividade do centro dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                    "name": "id",
-                    "in": "path",
-                    "description": "Id da atividade do centro",
-                    "required": true,
-                    "type": "integer"
-                }],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            },
-            "put": {
-                "summary": "Atualiza uma atividade de um centro dado o id",
-                "produces": ["application/json", "application/xml"],
-                "parameters": [{
-                        "name": "id",
-                        "in": "query",
-                        "description": "Id da atividade do centro",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Campos de entrada da atividade",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Atividade Centro"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                }
-            }
+  "info": {
+    "title": "Aliança Digital",
+    "version": "1.0.0",
+    "description": "Api do Aliança Digital"
+  },
+  "host": "162.214.123.133:3000",
+  "basePath": "/",
+  "swagger": "2.0",
+  "paths": {
+    "/api/v1/atividades": {
+      "get": {
+        "summary": "Retorna uma lista de atividades.",
+        "produces": ["application/json", "application/xml"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
-    },
-    "definitions": {
-        "Atividade": {
-            "type": "object",
-            "required": ["NOME_ATIVIDADE"],
-            "properties": {
-                "NOME_ATIVIDADE": {
-                    "type": "string"
-                }
+      },
+      "post": {
+        "summary": "Adiciona uma atividade dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of atividade object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Atividade"
             }
-        },
-        "Atividade Centro": {
-            "type": "object",
-            "required": ["ID_CENTRO", "ID_ATIVIDADE"],
-            "properties": {
-                "ID_CENTRO": {
-                    "type": "string"
-                },
-                "ID_ATIVIDADE": {
-                    "type": "string"
-                },
-                "HORAINI": {
-                    "type": "string"
-                },
-                "HORAFIM": {
-                    "type": "string"
-                },
-                "DIA_SEMANA": {
-                    "type": "string"
-                },
-                "NUMERO_TURMA": {
-                    "type": "integer"
-                }
-            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
         }
+      }
     },
-    "responses": {},
-    "parameters": {},
-    "securityDefinitions": {}
+    "/api/v1/atividades/{id}": {
+      "get": {
+        "summary": "Retorna uma atividade dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id da atividade",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove uma atividade dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id da atividade",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma atividade dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Id da atividade",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Campos de entrada da atividade",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Atividade"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/atividades_centro": {
+      "get": {
+        "summary": "Retorna uma lista de atividades do centro.",
+        "produces": ["application/json", "application/xml"],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Adiciona uma atividade ao centro dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of atividade object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Atividade Centro"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/atividades_centro/{id}": {
+      "get": {
+        "summary": "Retorna uma atividade do centro dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id da atividade do centro",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove uma atividade do centro dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id da atividade do centro",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma atividade de um centro dado o id",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Id da atividade do centro",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Campos de entrada da atividade",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Atividade Centro"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Atividade": {
+      "type": "object",
+      "required": ["NOME_ATIVIDADE"],
+      "properties": {
+        "NOME_ATIVIDADE": {
+          "type": "string"
+        }
+      }
+    },
+    "Atividade Centro": {
+      "type": "object",
+      "required": ["CENTRO_ID", "ATIVIDADE_ID"],
+      "properties": {
+        "CENTRO_ID": {
+          "type": "string"
+        },
+        "ATIVIDADE_ID": {
+          "type": "string"
+        },
+        "HORAINI": {
+          "type": "string"
+        },
+        "HORAFIM": {
+          "type": "string"
+        },
+        "DIA_SEMANA": {
+          "type": "string"
+        },
+        "NUMERO_TURMA": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "responses": {},
+  "parameters": {},
+  "securityDefinitions": {}
 }

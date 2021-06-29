@@ -1,190 +1,189 @@
 const {
-    UniqueConstraintError,
-    InvalidPropertyError,
-    RequiredParameterError
-} = require('../helpers/errors')
-const makeHttpError = require('../helpers/http-error')
-const makeAtividade = require('./atividade')
+  UniqueConstraintError,
+  InvalidPropertyError,
+  RequiredParameterError,
+} = require("../helpers/errors");
+const makeHttpError = require("../helpers/http-error");
+const makeAtividade = require("./atividade");
 
-module.exports = function makeAtividadeEndpointHandler({
-    atividadeList
-}) {
-    return async function handle(httpRequest) {
-        switch (httpRequest.method) {
-            case 'POST':
-                return postAtividade(httpRequest)
-                break;
-            case 'GET':
-                return getAtividades(httpRequest)
-                break;
-            case 'DELETE':
-                return removeAtividade(httpRequest)
-                break;
-            case 'PUT':
-                return updateAtividade(httpRequest)
-                break;
+module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
+  return async function handle(httpRequest) {
+    switch (httpRequest.method) {
+      case "POST":
+        return post(httpRequest);
+        break;
+      case "GET":
+        return get(httpRequest);
+        break;
+      case "DELETE":
+        return remove(httpRequest);
+        break;
+      case "PUT":
+        return update(httpRequest);
+        break;
 
-            default:
-                return makeHttpError({
-                    statusCode: 405,
-                    errorMessage: `${httpRequest.method} method not allowed.`
-                })
-                break;
-        }
+      default:
+        let errorMessage = `${httpRequest.method} method not allowed.`;
+        console.log(errorMessage);
+
+        return makeHttpError({
+          statusCode: 405,
+          errorMessage: errorMessage,
+        });
+        break;
+    }
+  };
+
+  function formatSearchParam(id, params) {
+    let searchParams;
+    if (id) {
+      searchParams = {
+        id: id,
+      };
+    } else if (Object.keys(params).length > 0) {
+      searchParams = params;
     }
 
-    async function getAtividades(httpRequest) {
-        const {
-            id
-        } = httpRequest.pathParams || {}
-        const {
-            max,
-            searchParam,
-            searchValue
-        } = httpRequest.queryParams || {}
+    return searchParams;
+  }
 
-        let hasQuery = function (id, searchParam, searchValue) {
-            return id || (searchParam && searchValue)
-        }
-        let searchParamConverted
-        if (searchParam) {
-            searchParamConverted = Number(searchParam)
-            searchParamConverted = convertSearchParam(searchParamConverted);
-        }
+  async function get(httpRequest) {
+    const { id } = httpRequest.pathParams || {};
+    const { max, ...params } = httpRequest.queryParams || {};
 
-        const result = hasQuery(id, searchParamConverted, searchValue) ? await atividadeList.findById({
-            atividadeId: id,
-            max,
-            searchParam: searchParamConverted,
-            searchValue
-        }) : await atividadeList.getItems({
-            max
-        })
+    let searchParams = formatSearchParam(id, params);
+    let hasParams = searchParams != null;
+    let result = [];
 
-        return {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            statusCode: 200,
-            data: JSON.stringify(result)
-        }
+    if (hasParams) {
+      result = await atividadeList.findByItems({
+        max,
+        searchParams,
+      });
+    } else {
+      result = await atividadeList.getItems({
+        max,
+      });
     }
 
-    async function postAtividade(httpRequest) {
-        let atividadeInfo = httpRequest.body
-        if (!atividadeInfo) {
-            return makeHttpError({
-                statusCode: 400,
-                errorMessage: 'Bad request. No POST body'
-            })
-        }
+    return {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      statusCode: 200,
+      data: JSON.stringify(result),
+    };
+  }
 
-        if (typeof httpRequest.body == 'string') {
-            try {
-                atividadeInfo = JSON.parse(atividadeInfo)
-            } catch {
-                return makeHttpError({
-                    statusCode: 400,
-                    errorMessage: 'Bad request. POST body must be valid JSON.'
-                })
-            }
-        }
-
-        try {
-            const atividade = makeAtividade(atividadeInfo)
-            const result = await atividadeList.add(atividade)
-            return {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                statusCode: 201,
-                data: JSON.stringify(result)
-            }
-
-        } catch (e) {
-            return makeHttpError({
-                errorMessage: e.message,
-                statusCode: e instanceof UniqueConstraintError ?
-                    409 : e instanceof InvalidPropertyError ||
-                    e instanceof RequiredParameterError ?
-                    400 : 500
-            })
-        }
+  async function post(httpRequest) {
+    let atividadeInfo = httpRequest.body;
+    if (!atividadeInfo) {
+      return makeHttpError({
+        statusCode: 400,
+        errorMessage: "Bad request. No POST body",
+      });
     }
 
-    async function removeAtividade(httpRequest) {
-        const {
-            id
-        } = httpRequest.pathParams || {}
-        const result = await atividadeList.remove({
-            atividadeId: id
-        })
-        return {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            statusCode: 200,
-            data: JSON.stringify(result)
-        }
+    if (typeof httpRequest.body == "string") {
+      try {
+        atividadeInfo = JSON.parse(atividadeInfo);
+      } catch {
+        return makeHttpError({
+          statusCode: 400,
+          errorMessage: "Bad request. POST body must be valid JSON.",
+        });
+      }
     }
 
-    async function updateAtividade(httpRequest) {
-        const {
-            id
-        } = httpRequest.pathParams || {}
-        let atividadeInfo = httpRequest.body
-        if (!atividadeInfo) {
-            return makeHttpError({
-                statusCode: 400,
-                errorMessage: 'Bad request. No PUT body'
-            })
-        }
+    try {
+      const itemAdded = await atividadeList.add(atividadeInfo);
+      const result = makeAtividade(itemAdded);
+      return {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        statusCode: 201,
+        data: JSON.stringify(result),
+      };
+    } catch (e) {
+      return makeHttpError({
+        errorMessage: e.message,
+        statusCode:
+          e instanceof UniqueConstraintError
+            ? 409
+            : e instanceof InvalidPropertyError ||
+              e instanceof RequiredParameterError
+            ? 400
+            : 500,
+      });
+    }
+  }
 
-        if (typeof httpRequest.body == 'string') {
-            try {
-                atividadeInfo = JSON.parse(atividadeInfo)
-            } catch {
-                return makeHttpError({
-                    statusCode: 400,
-                    errorMessage: 'Bad request. PUT body must be valid JSON.'
-                })
-            }
-        }
+  async function remove(httpRequest) {
+    const { id } = httpRequest.pathParams || {};
+    const { max, ...params } = httpRequest.queryParams || {};
 
-        try {
-            atividadeInfo.atividadeId = id
-            const result = await atividadeList.update(atividadeInfo)
-            return {
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                statusCode: 200,
-                data: JSON.stringify(result)
-            }
+    let searchParams = formatSearchParam(id, params);
 
-        } catch (e) {
-            return makeHttpError({
-                errorMessage: e.message,
-                statusCode: e instanceof UniqueConstraintError ?
-                    409 : e instanceof InvalidPropertyError ||
-                    e instanceof RequiredParameterError ?
-                    400 : 500
-            })
-        }
+    const result = await atividadeList.remove(searchParams);
+    return {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      statusCode: 200,
+      data: JSON.stringify(result),
+    };
+  }
+
+  async function update(httpRequest) {
+    const { id } = httpRequest.pathParams || {};
+    const { max, ...params } = httpRequest.queryParams || {};
+
+    let searchParams = formatSearchParam(id, params);
+
+    let atividadeInfo = httpRequest.body;
+    if (!atividadeInfo) {
+      return makeHttpError({
+        statusCode: 400,
+        errorMessage: "Bad request. No PUT body",
+      });
     }
 
-
-
-    function convertSearchParam(searchParam) {
-        switch (searchParam) {
-            case (1):
-                return {
-                    "param":"NOME_ATIVIDADE",
-                    "type": "like"
-                }
-            default:
-                return null;
-        };
+    if (typeof httpRequest.body == "string") {
+      try {
+        atividadeInfo = JSON.parse(atividadeInfo);
+      } catch {
+        return makeHttpError({
+          statusCode: 400,
+          errorMessage: "Bad request. PUT body must be valid JSON.",
+        });
+      }
     }
 
-}
+    try {
+      atividadeInfo.atividadeId = id;
+      const result = await atividadeList.update({
+        searchParams: searchParams,
+        atividade: atividadeInfo,
+      });
+      return {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        statusCode: 200,
+        data: JSON.stringify(result),
+      };
+    } catch (e) {
+      return makeHttpError({
+        errorMessage: e.message,
+        statusCode:
+          e instanceof UniqueConstraintError
+            ? 409
+            : e instanceof InvalidPropertyError ||
+              e instanceof RequiredParameterError
+            ? 400
+            : 500,
+      });
+    }
+  }
+};

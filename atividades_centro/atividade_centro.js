@@ -1,41 +1,49 @@
-const requiredParam = require('../helpers/required-param')
+const requiredParam = require("../helpers/required-param");
 
-const {
-    InvalidPropertyError
-} = require('../helpers/errors')
+const { InvalidPropertyError } = require("../helpers/errors");
 
 module.exports = function makeAtividadeCentro(
-    atividadeCentroInfo = requiredParam('atividadeCentroInfo')
+  atividadeCentroInfo = requiredParam("atividadeCentroInfo")
 ) {
+  validate(atividadeCentroInfo);
+  const normalAtividadeCentro = normalize(atividadeCentroInfo);
+  return Object.freeze(normalAtividadeCentro);
 
-    validate(atividadeCentroInfo)
-    const normalAtividadeCentro = normalize(atividadeCentroInfo)
-    return Object.freeze(normalAtividadeCentro)
+  function validate({
+    CENTRO_ID = requiredParam("CENTRO_ID"),
+    ATIVIDADE_ID = requiredParam("ATIVIDADE_ID"),
+    DIA_SEMANA = requiredParam("DIA_SEMANA"),
+    ...otherInfo
+  } = {}) {
+    validateDiaDaSemana(DIA_SEMANA);
 
-    function validate({
-        ID_CENTRO = requiredParam('ID_CENTRO'),
-        ID_ATIVIDADE = requiredParam('ID_ATIVIDADE'),
-        DIA_SEMANA = requiredParam('DIA_SEMANA'),
-        ...otherInfo
-    } = {}) {
-        validateDiaDaSemana(DIA_SEMANA)
+    return {
+      ...otherInfo,
+    };
+  }
 
-        return {
-            ...otherInfo
-        }
-    }
+  function validateDiaDaSemana(name) {
+    return true;
+  }
 
-    function validateDiaDaSemana(name) {
-        return true;
-    }
-
-
-    //metodo usado para caso queiramos deixa alguma coisa tudo minusculo por exemplo
-    function normalize({
-        ...otherInfo
-    }) {
-        return {
-            ...otherInfo
-        }
-    }
-}
+  //metodo usado para caso queiramos deixa alguma coisa tudo minusculo por exemplo
+  function normalize({
+    ATIVIDADE_ID,
+    CENTRO_ID,
+    HORINI,
+    HORFIM,
+    DIA_SEMANA,
+    NUMERO_TURMA,
+    _id,
+  }) {
+    return {
+      ATIVIDADE_ID,
+      CENTRO_ID,
+      HORINI,
+      HORFIM,
+      DIA_SEMANA,
+      NUMERO_TURMA,
+      ID: _id,
+    };
+  }
+};

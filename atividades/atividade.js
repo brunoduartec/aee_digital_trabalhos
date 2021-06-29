@@ -1,41 +1,39 @@
-const requiredParam = require('../helpers/required-param')
+const requiredParam = require("../helpers/required-param");
 
-const {
-    InvalidPropertyError
-} = require('../helpers/errors')
+const { InvalidPropertyError } = require("../helpers/errors");
 
 module.exports = function makeAtividade(
-    atividadeInfo = requiredParam('atividadeInfo')
+  atividadeInfo = requiredParam("atividadeInfo")
 ) {
+  validate(atividadeInfo);
+  const normalAtividade = normalize(atividadeInfo);
+  return Object.freeze(normalAtividade);
 
-    validate(atividadeInfo)
-    const normalAtividade = normalize(atividadeInfo)
-    return Object.freeze(normalAtividade)
+  function validate({
+    NOME_ATIVIDADE = requiredParam("NOME_ATIVIDADE"),
+    ...otherInfo
+  } = {}) {
+    validateName("NOME_ATIVIDADE", NOME_ATIVIDADE);
 
-    function validate({
-        NOME_ATIVIDADE = requiredParam('NOME_ATIVIDADE'),
-        ...otherInfo
-    } = {}) {
-        validateName('NOME_ATIVIDADE', NOME_ATIVIDADE)
+    return {
+      NOME_ATIVIDADE,
+      ...otherInfo,
+    };
+  }
 
-        return {
-            NOME_ATIVIDADE,
-            ...otherInfo
-        }
+  function validateName(label, name) {
+    if (name.length < 2) {
+      throw new InvalidPropertyError(
+        `O nome ${nome} tem que ter mais de 2 caracteres`
+      );
     }
+  }
 
-    function validateName(label, name) {
-        if (name.length < 2) {
-            throw new InvalidPropertyError(`O nome ${nome} tem que ter mais de 2 caracteres`)
-        }
-    }
-
-    //metodo usado para caso queiramos deixa alguma coisa tudo minusculo por exemplo
-    function normalize({
-        ...otherInfo
-    }) {
-        return {
-            ...otherInfo
-        }
-    }
-}
+  //metodo usado para caso queiramos deixa alguma coisa tudo minusculo por exemplo
+  function normalize({ NOME_ATIVIDADE, _id }) {
+    return {
+      NOME_ATIVIDADE,
+      ID: _id,
+    };
+  }
+};
