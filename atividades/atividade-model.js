@@ -8,4 +8,6 @@ const atividadeSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("atividade", atividadeSchema);
+module.exports = {
+  model: mongoose.model("atividade", atividadeSchema),
+};

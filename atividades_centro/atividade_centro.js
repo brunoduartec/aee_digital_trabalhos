@@ -34,6 +34,7 @@ module.exports = function makeAtividadeCentro(
     HORFIM,
     DIA_SEMANA,
     NUMERO_TURMA,
+    _id,
   }) {
     return {
       ATIVIDADE_ID,
@@ -42,6 +43,7 @@ module.exports = function makeAtividadeCentro(
       HORFIM,
       DIA_SEMANA,
       NUMERO_TURMA,
+      ID: _id,
     };
   }
 };

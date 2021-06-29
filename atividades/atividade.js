@@ -30,9 +30,10 @@ module.exports = function makeAtividade(
   }
 
   //metodo usado para caso queiramos deixa alguma coisa tudo minusculo por exemplo
-  function normalize({ NOME_ATIVIDADE }) {
+  function normalize({ NOME_ATIVIDADE, _id }) {
     return {
       NOME_ATIVIDADE,
+      ID: _id,
     };
   }
 };

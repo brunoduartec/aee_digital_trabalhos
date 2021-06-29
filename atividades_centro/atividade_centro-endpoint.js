@@ -98,8 +98,8 @@ module.exports = function makeAtividadeCentroEndpointHandler({
     }
 
     try {
-      const atividade_centro = makeAtividadeCentro(atividade_centroInfo);
-      const result = await atividade_centroList.add(atividade_centro);
+      const itemAdded = await atividade_centroList.add(atividade_centroInfo);
+      const result = makeAtividadeCentro(itemAdded);
       return {
         headers: {
           "Content-Type": "application/json",

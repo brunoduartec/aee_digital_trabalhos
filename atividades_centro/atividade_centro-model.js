@@ -3,8 +3,8 @@ const { Schema } = mongoose;
 
 const atividadeCentroSchema = new Schema({
   ATIVIDADE_ID: {
-    type: String,
-    require: true,
+    type: Schema.Types.ObjectId,
+    ref: "atividade",
   },
   CENTRO_ID: {
     type: String,
@@ -28,4 +28,7 @@ const atividadeCentroSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("atividade_centro", atividadeCentroSchema);
+module.exports = {
+  model: mongoose.model("atividade_centro", atividadeCentroSchema),
+  populate: ["atividade"],
+};

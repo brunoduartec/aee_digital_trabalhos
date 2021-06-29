@@ -47,12 +47,7 @@ module.exports = function makeAtividadeCentroList({ database }) {
       );
 
       atividade_centro = formatOutput(atividade_centro);
-
-      if (atividade_centro) {
-        return makeAtividadeCentro(atividade_centro);
-      } else {
-        return;
-      }
+      return atividade_centro;
     } catch (error) {
       console.log(error);
       throw error;
@@ -63,7 +58,6 @@ module.exports = function makeAtividadeCentroList({ database }) {
       let items = await database.getItems("atividade_centro", max);
 
       let atividade_centros = formatOutput(items);
-
       return atividade_centros;
     } catch (error) {
       console.log(error);

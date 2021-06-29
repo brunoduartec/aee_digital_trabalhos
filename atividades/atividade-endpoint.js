@@ -96,8 +96,8 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
     }
 
     try {
-      const atividade = makeAtividade(atividadeInfo);
-      const result = await atividadeList.add(atividade);
+      const itemAdded = await atividadeList.add(atividadeInfo);
+      const result = makeAtividade(itemAdded);
       return {
         headers: {
           "Content-Type": "application/json",
