@@ -6,16 +6,18 @@ const Connection = require("./db/connection")();
 const ModelFactory = require("./db/modelFactory");
 const AtividadeModel = require("./atividades/atividade-model");
 const AtividadeCentroModel = require("./atividades_centro/atividade_centro-model");
+const VoluntarioModel = require("./voluntarios/voluntario-model");
 
 ModelFactory.insertModel("atividade", AtividadeModel);
 ModelFactory.insertModel("atividade_centro", AtividadeCentroModel);
+ModelFactory.insertModel("voluntario", VoluntarioModel);
 
-const swaggerDoc = require("./helpers/swaggerDoc");
+const {
+  atividadeController,
+  atividadeCentroController,
+  voluntarioController,
+} = require("./controllers");
 
-const handleAtividadeRequest = require("./atividades");
-const handleAtividadeCentroRequest = require("./atividades_centro");
-
-const adaptRequest = require("./helpers/adapt-request");
 const app = express();
 app.options("*", cors()); // include before other routes
 
@@ -51,6 +53,9 @@ app.use("/api/v1/atividades/:id", atividadeController);
 app.all("/api/v1/atividades_centro", atividadeCentroController);
 app.use("/api/v1/atividades_centro/:id", atividadeCentroController);
 
+app.all("/api/v1/voluntarios", voluntarioController);
+app.use("/api/v1/voluntarios/:id", voluntarioController);
+
 app.get("/api/v1/boostrap", function (req, res) {
   const setup = require("./db/setup");
 
@@ -59,33 +64,6 @@ app.get("/api/v1/boostrap", function (req, res) {
   res.status(200).send("Tabelas Iniciadas");
 });
 
-swaggerDoc(app);
-
-function atividadeController(req, res) {
-  const httpRequest = adaptRequest(req);
-  handleAtividadeRequest(httpRequest)
-    .then(({ headers, statusCode, data }) => {
-      res.set(headers).status(statusCode).send(data);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).end();
-    });
-}
-
-function atividadeCentroController(req, res) {
-  const httpRequest = adaptRequest(req);
-  handleAtividadeCentroRequest(httpRequest)
-    .then(({ headers, statusCode, data }) => {
-      res.set(headers).status(statusCode).send(data);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).end();
-    });
-}
-
-// setup.bootstrap();
 module.exports = function () {
   return app;
 };

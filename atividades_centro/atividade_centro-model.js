@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const atividadeCentroSchema = new Schema({
-  ATIVIDADE_ID: {
+  ATIVIDADE: {
     type: Schema.Types.ObjectId,
     ref: "atividade",
   },
   CENTRO_ID: {
-    type: String,
+    type: Schema.Types.ObjectId,
     require: false,
   },
   HORINI: {
@@ -23,12 +23,30 @@ const atividadeCentroSchema = new Schema({
     require: false,
   },
   NUMERO_TURMA: {
-    type: String,
+    type: Number,
     require: false,
+  },
+  NUMERO_ATUADORES_HABILITADO: [],
+
+  NUMERO_ATUADORES_HABILITADOS: {
+    type: Number,
+    require: false,
+  },
+  NUMERO_RECEPTORES: {
+    type: Number,
+    require: false,
+  },
+  NUMERO_ATUADORES: {
+    type: Number,
+    require: false,
+  },
+  COORDENADOR_ID: {
+    type: Schema.Types.ObjectId,
+    required: false,
   },
 });
 
 module.exports = {
   model: mongoose.model("atividade_centro", atividadeCentroSchema),
-  populate: ["atividade"],
+  populate: ["ATIVIDADE"],
 };

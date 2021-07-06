@@ -6,6 +6,18 @@ const atividadeSchema = new Schema({
     type: String,
     require: true,
   },
+  RECEIVER_ALIAS: {
+    type: String,
+    require: true,
+  },
+  ATOR_ALIAS: {
+    type: String,
+    require: true,
+  },
+  COORDENADOR_ALIAS: {
+    type: String,
+    require: true,
+  },
 });
 
 module.exports = {

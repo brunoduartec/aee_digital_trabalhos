@@ -11,7 +11,7 @@ module.exports = function makeAtividadeCentro(
 
   function validate({
     CENTRO_ID = requiredParam("CENTRO_ID"),
-    ATIVIDADE_ID = requiredParam("ATIVIDADE_ID"),
+    ATIVIDADE = requiredParam("ATIVIDADE"),
     DIA_SEMANA = requiredParam("DIA_SEMANA"),
     ...otherInfo
   } = {}) {
@@ -28,21 +28,38 @@ module.exports = function makeAtividadeCentro(
 
   //metodo usado para caso queiramos deixa alguma coisa tudo minusculo por exemplo
   function normalize({
-    ATIVIDADE_ID,
+    ATIVIDADE,
     CENTRO_ID,
     HORINI,
     HORFIM,
     DIA_SEMANA,
     NUMERO_TURMA,
+    NUMERO_ATUADORES_HABILITADOS,
+    NUMERO_RECEPTORES,
+    NUMERO_ATUADORES,
+    COORDENADOR_ID,
     _id,
   }) {
+    if (ATIVIDADE) {
+      ATIVIDADE = {
+        NOME_ATIVIDADE: ATIVIDADE.NOME_ATIVIDADE,
+        RECEIVER_ALIAS: ATIVIDADE.RECEIVER_ALIAS,
+        ATOR_ALIAS: ATIVIDADE.ATOR_ALIAS,
+        COORDENADOR_ALIAS: ATIVIDADE.COORDENADOR_ALIAS,
+      };
+    }
+
     return {
-      ATIVIDADE_ID,
+      ATIVIDADE,
       CENTRO_ID,
       HORINI,
       HORFIM,
       DIA_SEMANA,
       NUMERO_TURMA,
+      NUMERO_ATUADORES_HABILITADOS,
+      NUMERO_RECEPTORES,
+      NUMERO_ATUADORES,
+      COORDENADOR_ID,
       ID: _id,
     };
   }

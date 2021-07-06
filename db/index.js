@@ -64,7 +64,7 @@ module.exports = function makeDb(ModelFactory) {
 
       let populateTags = populateItems(populate);
 
-      let item = await Model.find(params);
+      let item = await Model.find(params).populate(populateTags);
 
       return item;
     } catch (error) {
@@ -79,7 +79,8 @@ module.exports = function makeDb(ModelFactory) {
       const populate = modelInfo.populate;
 
       let populateTags = populateItems(populate);
-      let items = await Model.find();
+      let items = await Model.find().populate(populateTags);
+
       if (items && items.length > 0) {
         return items;
       } else {

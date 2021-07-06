@@ -20,9 +20,6 @@ module.exports = function makeAtividadeCentroList({ database }) {
           let itemToPush = makeAtividadeCentro(item);
           output.push(itemToPush);
         });
-      } else {
-        let itemToPush = makeAtividadeCentro(items);
-        output.push(itemToPush);
       }
     }
 
