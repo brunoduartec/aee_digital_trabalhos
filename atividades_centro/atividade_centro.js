@@ -40,7 +40,7 @@ module.exports = function makeAtividadeCentro(
     COORDENADOR_ID,
     _id,
   }) {
-    if (ATIVIDADE) {
+    if (ATIVIDADE && ATIVIDADE.NOME_ATIVIDADE) {
       ATIVIDADE = {
         NOME_ATIVIDADE: ATIVIDADE.NOME_ATIVIDADE,
         RECEIVER_ALIAS: ATIVIDADE.RECEIVER_ALIAS,
