@@ -1,7 +1,7 @@
-const makeAtividade = require("./atividade");
+const makeVoluntario = require("./voluntario");
 const { UniqueConstraintError } = require("../helpers/errors");
 
-module.exports = function makeAtividadeList({ database }) {
+module.exports = function makeVoluntarioList({ database }) {
   return Object.freeze({
     add,
     findByItems,
@@ -17,19 +17,22 @@ module.exports = function makeAtividadeList({ database }) {
     if (items) {
       if (items.length > 0) {
         items.forEach((item) => {
-          let itemToPush = makeAtividade(item);
+          let itemToPush = makeVoluntario(item);
           output.push(itemToPush);
         });
+      } else {
+        let itemToPush = makeVoluntario(items);
+        output.push(itemToPush);
       }
     }
 
     return output;
   }
 
-  async function add(atividadeInfo) {
+  async function add(voluntarioInfo) {
     try {
-      let atividade = makeAtividade(atividadeInfo);
-      return await database.add("atividade", atividade);
+      let voluntario = makeVoluntario(voluntarioInfo);
+      return await database.add("voluntario", voluntario);
     } catch (error) {
       console.log(error);
       throw error;
@@ -37,14 +40,14 @@ module.exports = function makeAtividadeList({ database }) {
   }
   async function findByItems({ max, searchParams }) {
     try {
-      let atividade = await database.findByItems(
-        "atividade",
+      let voluntario = await database.findByItems(
+        "voluntario",
         max,
         searchParams
       );
 
-      let atividades = formatOutput(atividade);
-      return atividades;
+      let voluntarios = formatOutput(voluntario);
+      return voluntarios;
     } catch (error) {
       console.log(error);
       throw error;
@@ -52,10 +55,10 @@ module.exports = function makeAtividadeList({ database }) {
   }
   async function getItems({ max }) {
     try {
-      let items = await database.getItems("atividade", max);
+      let items = await database.getItems("voluntario", max);
 
-      let atividades = formatOutput(items);
-      return atividades;
+      let voluntarios = formatOutput(items);
+      return voluntarios;
     } catch (error) {
       console.log(error);
       throw error;
@@ -63,23 +66,23 @@ module.exports = function makeAtividadeList({ database }) {
   }
   async function remove(searchParams) {
     try {
-      return await database.remove("atividade", searchParams);
+      return await database.remove("voluntario", searchParams);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  async function replace({ searchParams, atividade }) {
+  async function replace({ searchParams, voluntario }) {
     try {
-      return await database.replace("atividade", atividade, searchParams);
+      return await database.replace("voluntario", voluntario, searchParams);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  async function update({ searchParams, atividade }) {
+  async function update({ searchParams, voluntario }) {
     try {
-      return await database.update("atividade", atividade, searchParams);
+      return await database.update("voluntario", voluntario, searchParams);
     } catch (error) {
       console.log(error);
       throw error;
