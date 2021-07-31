@@ -2,9 +2,12 @@ version: "3"
 
 services:
   aee_digital_trabalhos:
+    environment:
+      - NODE_ENV=development
     build: .
     command: npm start
     image: aee_digital_trabalhos
+    container_name: aee_digital_trabalhos
     ports:
       - "3100:3100"
     volumes:
