@@ -22,7 +22,7 @@ const app = express();
 app.options("*", cors()); // include before other routes
 
 app.use((req, res, next) => {
-  console.log("Acessou o Middleware!");
+  console.log("Acessou o Middleware!", req);
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
