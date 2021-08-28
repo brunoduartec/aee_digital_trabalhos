@@ -1,6 +1,17 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const voluntarioSchema = new Schema({
+  TIPO: {
+    type: String,
+    require: true,
+  },
+  QUANTIDADE: {
+    type: Number,
+    require: true,
+  },
+});
+
 const atividadeCentroSchema = new Schema({
   ATIVIDADE: {
     type: Schema.Types.ObjectId,
@@ -26,20 +37,9 @@ const atividadeCentroSchema = new Schema({
     type: Number,
     require: false,
   },
-  NUMERO_ATUADORES_HABILITADO: [],
-
-  NUMERO_ATUADORES_HABILITADOS: {
-    type: Number,
-    require: false,
-  },
-  NUMERO_RECEPTORES: {
-    type: Number,
-    require: false,
-  },
-  NUMERO_ATUADORES: {
-    type: Number,
-    require: false,
-  },
+  ATUADORES_HABILITADO: [voluntarioSchema],
+  ATUADORES: [voluntarioSchema],
+  RECEPTORES: [voluntarioSchema],
   COORDENADOR_ID: {
     type: Schema.Types.ObjectId,
     required: false,
