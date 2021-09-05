@@ -1,20 +1,21 @@
 const handleAtividadeRequest = require("./atividades");
 const handleAtividadeCentroRequest = require("./atividades_centro");
-const handleVoluntarioRequest = require("./voluntarios");
+const handleAtividadeCentroSummaryRequest = require("./atividades_centro_summary");
 
 const adaptRequest = require("./helpers/adapt-request");
 
-module.exports.voluntarioController = function voluntarioController(req, res) {
-  const httpRequest = adaptRequest(req);
-  handleVoluntarioRequest(httpRequest)
-    .then(({ headers, statusCode, data }) => {
-      res.set(headers).status(statusCode).send(data);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).end();
-    });
-};
+module.exports.atividadeCentroSummaryController =
+  function atividadeCentroSummaryController(req, res) {
+    const httpRequest = adaptRequest(req);
+    handleAtividadeCentroSummaryRequest(httpRequest)
+      .then(({ headers, statusCode, data }) => {
+        res.set(headers).status(statusCode).send(data);
+      })
+      .catch((e) => {
+        console.log(e);
+        res.status(500).end();
+      });
+  };
 
 module.exports.atividadeController = function atividadeController(req, res) {
   const httpRequest = adaptRequest(req);

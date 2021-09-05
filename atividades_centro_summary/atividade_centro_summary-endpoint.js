@@ -4,9 +4,11 @@ const {
   RequiredParameterError,
 } = require("../helpers/errors");
 const makeHttpError = require("../helpers/http-error");
-const makeVoluntario = require("./voluntario");
+const makeAtividadeCentro = require("./atividade_centro_summary");
 
-module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
+module.exports = function makeAtividadeCentroEndpointHandler({
+  atividade_centro_summaryList,
+}) {
   return async function handle(httpRequest) {
     switch (httpRequest.method) {
       case "POST":
@@ -56,12 +58,12 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
     let result = [];
 
     if (hasParams) {
-      result = await voluntarioList.findByItems({
+      result = await atividade_centro_summaryList.findByItems({
         max,
         searchParams,
       });
     } else {
-      result = await voluntarioList.getItems({
+      result = await atividade_centro_summaryList.getItems({
         max,
       });
     }
@@ -76,8 +78,8 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
   }
 
   async function post(httpRequest) {
-    let voluntarioInfo = httpRequest.body;
-    if (!voluntarioInfo) {
+    let atividade_centro_summaryInfo = httpRequest.body;
+    if (!atividade_centro_summaryInfo) {
       return makeHttpError({
         statusCode: 400,
         errorMessage: "Bad request. No POST body",
@@ -86,7 +88,7 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
 
     if (typeof httpRequest.body == "string") {
       try {
-        voluntarioInfo = JSON.parse(voluntarioInfo);
+        atividade_centro_summaryInfo = JSON.parse(atividade_centro_summaryInfo);
       } catch {
         return makeHttpError({
           statusCode: 400,
@@ -96,8 +98,10 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
     }
 
     try {
-      const itemAdded = await voluntarioList.add(voluntarioInfo);
-      const result = makeVoluntario(itemAdded);
+      const itemAdded = await atividade_centro_summaryList.add(
+        atividade_centro_summaryInfo
+      );
+      const result = makeAtividadeCentro(itemAdded);
       return {
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +129,7 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
 
     let searchParams = formatSearchParam(id, params);
 
-    const result = await voluntarioList.remove(searchParams);
+    const result = await atividade_centro_summaryList.remove(searchParams);
     return {
       headers: {
         "Content-Type": "application/json",
@@ -141,8 +145,8 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
 
     let searchParams = formatSearchParam(id, params);
 
-    let voluntarioInfo = httpRequest.body;
-    if (!voluntarioInfo) {
+    let atividade_centro_summaryInfo = httpRequest.body;
+    if (!atividade_centro_summaryInfo) {
       return makeHttpError({
         statusCode: 400,
         errorMessage: "Bad request. No PUT body",
@@ -151,7 +155,7 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
 
     if (typeof httpRequest.body == "string") {
       try {
-        voluntarioInfo = JSON.parse(voluntarioInfo);
+        atividade_centro_summaryInfo = JSON.parse(atividade_centro_summaryInfo);
       } catch {
         return makeHttpError({
           statusCode: 400,
@@ -161,10 +165,10 @@ module.exports = function makeVoluntarioEndpointHandler({ voluntarioList }) {
     }
 
     try {
-      voluntarioInfo.voluntarioId = id;
-      const result = await voluntarioList.update({
+      atividade_centro_summaryInfo.atividade_centro_summaryId = id;
+      const result = await atividade_centro_summaryList.update({
         searchParams: searchParams,
-        voluntario: voluntarioInfo,
+        atividade_centro_summary: atividade_centro_summaryInfo,
       });
       return {
         headers: {

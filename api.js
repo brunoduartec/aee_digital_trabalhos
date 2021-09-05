@@ -6,16 +6,19 @@ const Connection = require("./db/connection")();
 const ModelFactory = require("./db/modelFactory");
 const AtividadeModel = require("./atividades/atividade-model");
 const AtividadeCentroModel = require("./atividades_centro/atividade_centro-model");
-const VoluntarioModel = require("./voluntarios/voluntario-model");
+const AtividadeCentroSummaryModel = require("./atividades_centro_summary/atividade_centro_summary-model");
 
 ModelFactory.insertModel("atividade", AtividadeModel);
 ModelFactory.insertModel("atividade_centro", AtividadeCentroModel);
-ModelFactory.insertModel("voluntario", VoluntarioModel);
+ModelFactory.insertModel(
+  "atividade_centro_summary",
+  AtividadeCentroSummaryModel
+);
 
 const {
   atividadeController,
   atividadeCentroController,
-  voluntarioController,
+  atividadeCentroSummaryController,
 } = require("./controllers");
 
 const app = express();
@@ -53,16 +56,11 @@ app.use("/api/v1/atividades/:id", atividadeController);
 app.all("/api/v1/atividades_centro", atividadeCentroController);
 app.use("/api/v1/atividades_centro/:id", atividadeCentroController);
 
-app.all("/api/v1/voluntarios", voluntarioController);
-app.use("/api/v1/voluntarios/:id", voluntarioController);
-
-app.get("/api/v1/boostrap", function (req, res) {
-  const setup = require("./db/setup");
-
-  setup.bootstrap();
-
-  res.status(200).send("Tabelas Iniciadas");
-});
+app.all("/api/v1/atividade_centro_summary", atividadeCentroSummaryController);
+app.use(
+  "/api/v1/atividade_centro_summary/:id",
+  atividadeCentroSummaryController
+);
 
 module.exports = function () {
   return app;
