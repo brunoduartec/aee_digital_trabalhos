@@ -34,5 +34,6 @@ const atividadeCentroSchema = new Schema({
 
 module.exports = {
   model: mongoose.model("atividade_centro", atividadeCentroSchema),
+  schema: atividadeCentroSchema,
   populate: ["ATIVIDADE"],
 };

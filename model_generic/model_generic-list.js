@@ -1,7 +1,5 @@
-const makeAtividade = require("./atividade");
-const { UniqueConstraintError } = require("../helpers/errors");
-
-module.exports = function makeAtividadeList({ database }) {
+const makeModelGeneric = require("./model_generic_entity");
+module.exports = function makeModelGenericList({ database, modelName }) {
   return Object.freeze({
     add,
     findByItems,
@@ -17,7 +15,7 @@ module.exports = function makeAtividadeList({ database }) {
     if (items) {
       if (items.length > 0) {
         items.forEach((item) => {
-          let itemToPush = makeAtividade(item);
+          let itemToPush = makeModelGeneric(item, modelName);
           output.push(itemToPush);
         });
       }
@@ -26,10 +24,10 @@ module.exports = function makeAtividadeList({ database }) {
     return output;
   }
 
-  async function add(atividadeInfo) {
+  async function add(model_genericInfo) {
     try {
-      let atividade = makeAtividade(atividadeInfo);
-      return await database.add("atividade", atividade);
+      let model_generic = makeModelGeneric(model_genericInfo, modelName);
+      return await database.add(modelName, model_generic);
     } catch (error) {
       console.log(error);
       throw error;
@@ -37,14 +35,14 @@ module.exports = function makeAtividadeList({ database }) {
   }
   async function findByItems({ max, searchParams }) {
     try {
-      let atividade = await database.findByItems(
-        "atividade",
+      let model_generic = await database.findByItems(
+        modelName,
         max,
         searchParams
       );
 
-      let atividades = formatOutput(atividade);
-      return atividades;
+      model_generic = formatOutput(model_generic);
+      return model_generic;
     } catch (error) {
       console.log(error);
       throw error;
@@ -52,10 +50,10 @@ module.exports = function makeAtividadeList({ database }) {
   }
   async function getItems({ max }) {
     try {
-      let items = await database.getItems("atividade", max);
+      let items = await database.getItems(modelName, max);
 
-      let atividades = formatOutput(items);
-      return atividades;
+      let model_generics = formatOutput(items);
+      return model_generics;
     } catch (error) {
       console.log(error);
       throw error;
@@ -63,23 +61,23 @@ module.exports = function makeAtividadeList({ database }) {
   }
   async function remove(searchParams) {
     try {
-      return await database.remove("atividade", searchParams);
+      return await database.remove(modelName, searchParams);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  async function replace({ searchParams, atividade }) {
+  async function replace({ searchParams, model_generic }) {
     try {
-      return await database.replace("atividade", atividade, searchParams);
+      return await database.replace(modelName, model_generic, searchParams);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  async function update({ searchParams, atividade }) {
+  async function update({ searchParams, model_generic }) {
     try {
-      return await database.update("atividade", atividade, searchParams);
+      return await database.update(modelName, model_generic, searchParams);
     } catch (error) {
       console.log(error);
       throw error;

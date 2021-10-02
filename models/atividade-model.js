@@ -22,4 +22,5 @@ const atividadeSchema = new Schema({
 
 module.exports = {
   model: mongoose.model("atividade", atividadeSchema),
+  schema: atividadeSchema,
 };
