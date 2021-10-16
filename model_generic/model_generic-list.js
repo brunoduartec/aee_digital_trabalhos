@@ -35,14 +35,14 @@ module.exports = function makeModelGenericList({ database, modelName }) {
   }
   async function findByItems({ max, searchParams }) {
     try {
-      let model_generic = await database.findByItems(
+      let model_generic_info = await database.findByItems(
         modelName,
         max,
         searchParams
       );
 
-      model_generic = formatOutput(model_generic);
-      return model_generic;
+      model_generic_info = formatOutput(model_generic_info);
+      return model_generic_info;
     } catch (error) {
       console.log(error);
       throw error;
@@ -52,8 +52,8 @@ module.exports = function makeModelGenericList({ database, modelName }) {
     try {
       let items = await database.getItems(modelName, max);
 
-      let model_generics = formatOutput(items);
-      return model_generics;
+      let model_generics_info = formatOutput(items);
+      return model_generics_info;
     } catch (error) {
       console.log(error);
       throw error;
@@ -67,17 +67,21 @@ module.exports = function makeModelGenericList({ database, modelName }) {
       throw error;
     }
   }
-  async function replace({ searchParams, model_generic }) {
+  async function replace({ searchParams, model_generic_info }) {
     try {
-      return await database.replace(modelName, model_generic, searchParams);
+      return await database.replace(
+        modelName,
+        model_generic_info,
+        searchParams
+      );
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
-  async function update({ searchParams, model_generic }) {
+  async function update({ searchParams, model_generic_info }) {
     try {
-      return await database.update(modelName, model_generic, searchParams);
+      return await database.update(modelName, model_generic_info, searchParams);
     } catch (error) {
       console.log(error);
       throw error;

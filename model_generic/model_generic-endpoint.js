@@ -100,14 +100,29 @@ module.exports = function makeModelGenericEndpointHandler({
     }
 
     try {
-      const itemAdded = await modelGenericList.add(model_genericInfo);
-      const result = makeGeneric(itemAdded, modelName);
+
+      let results = []
+      let entries = [];
+      if(Array.isArray(model_genericInfo)){
+        entries = model_genericInfo
+      }
+      else{
+        entries.push(model_genericInfo);
+      }
+
+
+      for (let index = 0; index < entries.length; index++) {
+        const entry = entries[index];
+        const itemAdded = await modelGenericList.add(entry);
+        const result = makeGeneric(itemAdded, modelName);
+        results.push(result);
+      }
       return {
         headers: {
           "Content-Type": "application/json",
         },
         statusCode: 201,
-        data: JSON.stringify(result),
+        data: JSON.stringify(results),
       };
     } catch (e) {
       return makeHttpError({
@@ -165,10 +180,10 @@ module.exports = function makeModelGenericEndpointHandler({
     }
 
     try {
-      model_genericInfo.model_genericId = id;
+      // model_genericInfo.model_genericId = id;
       const result = await modelGenericList.update({
         searchParams: searchParams,
-        model_generic: model_genericInfo,
+        model_generic_info: model_genericInfo,
       });
       return {
         headers: {

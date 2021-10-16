@@ -10,6 +10,12 @@ const questionSchema = new Schema({
     type: String,
     require: true,
   },
+  PRESET_VALUES:[
+    {
+      type: String,
+      require:false
+    }
+  ]
 });
 
 const atividadeGenericQuizSchema = new Schema({
