@@ -56,13 +56,10 @@ module.exports = function makeDb(ModelFactory) {
     }
   }
 
-  function filterParams(params){
-
-  }
 
   async function findByItems(modelName, max, params) {
     try {
-      console.log("findByItems=>", params)
+      console.log("findByItems=>", params);
       const modelInfo = ModelFactory.getModel(modelName);
       const Model = modelInfo.model;
       const populate = modelInfo.populate;
@@ -72,30 +69,29 @@ module.exports = function makeDb(ModelFactory) {
 
       let populateTags = populateItems(populate);
 
-      let item = await Model.find({})
-      .populate(populateTags)
-      
-      item = item.filter((m)=>{
-        let validate = true
+      let item = await Model.find({}).populate(populateTags);
+
+      item = item.filter((m) => {
+        let validate = true;
 
         for (let index = 0; index < items.length; index++) {
           const it = items[index];
-          
+
           let paramsSplited = it.split(".");
 
-          itemToSearch = m[paramsSplited[0]]
+          itemToSearch = m[paramsSplited[0]];
 
-          if(paramsSplited.length>1){
-            itemToSearch = itemToSearch[paramsSplited[1]]
+          if (paramsSplited.length > 1) {
+            itemToSearch = itemToSearch[paramsSplited[1]];
           }
 
-          validate = validate && itemToSearch.toString().includes(values[index]);
+          validate =
+            validate && itemToSearch.toString().includes(values[index]);
         }
-        
-        return validate;
-      })
 
-        
+        return validate;
+      });
+
       return item;
     } catch (error) {
       throw error;
@@ -147,7 +143,9 @@ module.exports = function makeDb(ModelFactory) {
       const ModelInfo = ModelFactory.getModel(modelName);
       const Model = ModelInfo.model;
       conditions = formatParams(conditions);
+
       const result = await Model.updateOne(conditions, item);
+
       return result;
     } catch (error) {
       throw error;

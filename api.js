@@ -4,19 +4,25 @@ const cors = require("cors");
 
 const Connection = require("./db/connection")();
 const ModelFactory = require("./db/modelFactory");
-const AtividadeModel = require("./atividades/atividade-model");
-const AtividadeCentroModel = require("./atividades_centro/atividade_centro-model");
-const VoluntarioModel = require("./voluntarios/voluntario-model");
 
-ModelFactory.insertModel("atividade", AtividadeModel);
-ModelFactory.insertModel("atividade_centro", AtividadeCentroModel);
-ModelFactory.insertModel("voluntario", VoluntarioModel);
+const models = [
+  "atividade_centro_summary",
+  "atividade_centro",
+  "atividade_generic_form",
+  "atividade_generic_quiz_answer",
+  "atividade_generic_quiz",
+  "atividade",
+  "participante",
+];
 
-const {
-  atividadeController,
-  atividadeCentroController,
-  voluntarioController,
-} = require("./controllers");
+for (let index = 0; index < models.length; index++) {
+  const model = models[index];
+
+  const modelInfo = require(`./models/${model}-model`);
+  ModelFactory.insertModel(model, modelInfo);
+}
+
+const controllers = require("./controllers");
 
 const app = express();
 app.options("*", cors()); // include before other routes
@@ -47,22 +53,13 @@ app.get("/", function (req, res) {
   res.json(versionInfo);
 });
 
-app.all("/api/v1/atividades", atividadeController);
-app.use("/api/v1/atividades/:id", atividadeController);
+for (let index = 0; index < models.length; index++) {
+  const model = models[index];
 
-app.all("/api/v1/atividades_centro", atividadeCentroController);
-app.use("/api/v1/atividades_centro/:id", atividadeCentroController);
-
-app.all("/api/v1/voluntarios", voluntarioController);
-app.use("/api/v1/voluntarios/:id", voluntarioController);
-
-app.get("/api/v1/boostrap", function (req, res) {
-  const setup = require("./db/setup");
-
-  setup.bootstrap();
-
-  res.status(200).send("Tabelas Iniciadas");
-});
+  let controller = controllers[`${model}_controller`];
+  app.all(`/api/v1/${model}`, controller);
+  app.use(`/api/v1/${model}/:id`, controller);
+}
 
 module.exports = function () {
   return app;

@@ -1,12 +1,16 @@
+const makeGeneric = require("./model_generic_entity");
+
 const {
   UniqueConstraintError,
   InvalidPropertyError,
   RequiredParameterError,
 } = require("../helpers/errors");
 const makeHttpError = require("../helpers/http-error");
-const makeAtividade = require("./atividade");
 
-module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
+module.exports = function makeModelGenericEndpointHandler({
+  modelGenericList,
+  modelName,
+}) {
   return async function handle(httpRequest) {
     switch (httpRequest.method) {
       case "POST":
@@ -56,12 +60,12 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
     let result = [];
 
     if (hasParams) {
-      result = await atividadeList.findByItems({
+      result = await modelGenericList.findByItems({
         max,
         searchParams,
       });
     } else {
-      result = await atividadeList.getItems({
+      result = await modelGenericList.getItems({
         max,
       });
     }
@@ -76,8 +80,8 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
   }
 
   async function post(httpRequest) {
-    let atividadeInfo = httpRequest.body;
-    if (!atividadeInfo) {
+    let model_genericInfo = httpRequest.body;
+    if (!model_genericInfo) {
       return makeHttpError({
         statusCode: 400,
         errorMessage: "Bad request. No POST body",
@@ -86,7 +90,7 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
 
     if (typeof httpRequest.body == "string") {
       try {
-        atividadeInfo = JSON.parse(atividadeInfo);
+        model_genericInfo = JSON.parse(model_genericInfo);
       } catch {
         return makeHttpError({
           statusCode: 400,
@@ -96,14 +100,29 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
     }
 
     try {
-      const itemAdded = await atividadeList.add(atividadeInfo);
-      const result = makeAtividade(itemAdded);
+
+      let results = []
+      let entries = [];
+      if(Array.isArray(model_genericInfo)){
+        entries = model_genericInfo
+      }
+      else{
+        entries.push(model_genericInfo);
+      }
+
+
+      for (let index = 0; index < entries.length; index++) {
+        const entry = entries[index];
+        const itemAdded = await modelGenericList.add(entry);
+        const result = makeGeneric(itemAdded, modelName);
+        results.push(result);
+      }
       return {
         headers: {
           "Content-Type": "application/json",
         },
         statusCode: 201,
-        data: JSON.stringify(result),
+        data: JSON.stringify(results),
       };
     } catch (e) {
       return makeHttpError({
@@ -125,7 +144,7 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
 
     let searchParams = formatSearchParam(id, params);
 
-    const result = await atividadeList.remove(searchParams);
+    const result = await modelGenericList.remove(searchParams);
     return {
       headers: {
         "Content-Type": "application/json",
@@ -141,8 +160,8 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
 
     let searchParams = formatSearchParam(id, params);
 
-    let atividadeInfo = httpRequest.body;
-    if (!atividadeInfo) {
+    let model_genericInfo = httpRequest.body;
+    if (!model_genericInfo) {
       return makeHttpError({
         statusCode: 400,
         errorMessage: "Bad request. No PUT body",
@@ -151,7 +170,7 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
 
     if (typeof httpRequest.body == "string") {
       try {
-        atividadeInfo = JSON.parse(atividadeInfo);
+        model_genericInfo = JSON.parse(model_genericInfo);
       } catch {
         return makeHttpError({
           statusCode: 400,
@@ -161,10 +180,10 @@ module.exports = function makeAtividadeEndpointHandler({ atividadeList }) {
     }
 
     try {
-      atividadeInfo.atividadeId = id;
-      const result = await atividadeList.update({
+      // model_genericInfo.model_genericId = id;
+      const result = await modelGenericList.update({
         searchParams: searchParams,
-        atividade: atividadeInfo,
+        model_generic_info: model_genericInfo,
       });
       return {
         headers: {
