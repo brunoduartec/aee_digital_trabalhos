@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 services:
   aee_digital_trabalhos:
@@ -10,19 +10,24 @@ services:
     container_name: aee_digital_trabalhos
     ports:
       - "3100:3100"
+    networks:
+      - aee_digital_backend
     volumes:
       - .:/usr/app
     depends_on:
       - "mongo"
     links:
       - mongo
-    tty: true
+    restart: always
   mongo:
     image: mongo
     volumes:
       - ./data/db:/data/db
     ports:
       - "3110:27017"
+    networks:
+      - aee_digital_backend
+    restart: always
   mongo-express:
     image: mongo-express
     environment:
@@ -32,4 +37,10 @@ services:
       - mongo
     ports:
       - "30101:8081"
+    networks:
+      - aee_digital_backend
     restart: always
+networks:
+  aee_digital_backend:
+    name: aee_digital_backend
+    driver: bridge
