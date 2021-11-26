@@ -10,6 +10,7 @@ const models = [
   "atividade_centro",
   "atividade_generic_form",
   "atividade_generic_quiz_answer",
+  "atividade_generic_question",
   "atividade_generic_quiz",
   "atividade",
   "participante",

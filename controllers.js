@@ -23,6 +23,10 @@ const handleAtividadeGenericForm = require("./model_generic")({
   modelName: "atividade_generic_form",
 });
 
+const handleAtividadeGenericQuestion = require("./model_generic")({
+  modelName: "atividade_generic_question",
+});
+
 const adaptRequest = require("./helpers/adapt-request");
 
 module.exports.atividade_centro_summary_controller =
@@ -110,6 +114,19 @@ module.exports.atividade_generic_form_controller =
   function atividadeGenericFormController(req, res) {
     const httpRequest = adaptRequest(req);
     handleAtividadeGenericForm(httpRequest)
+      .then(({ headers, statusCode, data }) => {
+        res.set(headers).status(statusCode).send(data);
+      })
+      .catch((e) => {
+        console.log(e);
+        res.status(500).end();
+      });
+  };
+
+module.exports.atividade_generic_question_controller =
+  function atividadeGenericQuestionController(req, res) {
+    const httpRequest = adaptRequest(req);
+    handleAtividadeGenericQuestion(httpRequest)
       .then(({ headers, statusCode, data }) => {
         res.set(headers).status(statusCode).send(data);
       })

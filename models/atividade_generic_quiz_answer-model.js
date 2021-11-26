@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+var deepPopulate = require("mongoose-deep-populate")(mongoose);
 const { Schema } = mongoose;
 
 const answerSchema = new Schema({
@@ -19,6 +20,11 @@ const answerSchema = new Schema({
     require: true,
   },
 });
+
+answerSchema.plugin(
+  deepPopulate
+  // options /* more on options below */
+);
 
 module.exports = {
   model: mongoose.model("atividade_generic_quiz_answer", answerSchema),

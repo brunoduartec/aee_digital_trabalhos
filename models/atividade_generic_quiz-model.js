@@ -1,32 +1,27 @@
 const mongoose = require("mongoose");
+var deepPopulate = require("mongoose-deep-populate")(mongoose);
 const { Schema } = mongoose;
-
-const questionSchema = new Schema({
-  QUESTION: {
-    type: String,
-    require: true,
-  },
-  ANSWER_TYPE: {
-    type: String,
-    require: true,
-  },
-  PRESET_VALUES:[
-    {
-      type: String,
-      require:false
-    }
-  ]
-});
 
 const atividadeGenericQuizSchema = new Schema({
   CATEGORY: {
     type: String,
     require: true,
   },
-  QUESTIONS: [questionSchema],
+  QUESTIONS: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "atividade_generic_question",
+    },
+  ],
 });
+
+atividadeGenericQuizSchema.plugin(
+  deepPopulate
+  // options /* more on options below */
+);
 
 module.exports = {
   model: mongoose.model("atividade_generic_quiz", atividadeGenericQuizSchema),
   schema: atividadeGenericQuizSchema,
+  populate: ["QUESTIONS"],
 };
