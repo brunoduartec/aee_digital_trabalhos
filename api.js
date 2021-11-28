@@ -57,7 +57,7 @@ app.get("/", function (req, res) {
 for (let index = 0; index < models.length; index++) {
   const model = models[index];
 
-  let controller = controllers[`${model}_controller`];
+  let controller = controllers["generic_controller"];
   app.all(`/api/v1/${model}`, controller);
   app.use(`/api/v1/${model}/:id`, controller);
 }
