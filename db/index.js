@@ -132,7 +132,9 @@ module.exports = function makeDb(ModelFactory) {
           }
 
           validate =
-            validate && itemToSearch.toString().includes(values[index]);
+            validate &&
+            itemToSearch &&
+            itemToSearch.toString().includes(values[index]);
         }
 
         return validate;

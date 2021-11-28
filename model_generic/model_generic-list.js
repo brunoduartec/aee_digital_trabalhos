@@ -15,8 +15,12 @@ module.exports = function makeModelGenericList({ database, modelName }) {
     if (items) {
       if (items.length > 0) {
         items.forEach((item) => {
-          let itemToPush = makeModelGeneric(item, modelName);
-          output.push(itemToPush);
+          try {
+            let itemToPush = makeModelGeneric(item, modelName);
+            output.push(itemToPush);
+          } catch (error) {
+            console.log("Item falltando", error);
+          }
         });
       }
     }

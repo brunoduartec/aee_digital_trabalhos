@@ -12,6 +12,7 @@ const models = [
   "atividade_generic_quiz_answer",
   "atividade_generic_question",
   "atividade_generic_quiz",
+  "atividade_generic_quiz_summary",
   "atividade",
   "participante",
 ];
