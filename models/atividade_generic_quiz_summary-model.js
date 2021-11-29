@@ -10,7 +10,7 @@ const atividadeGenericQuizSummarysSchema = new Schema({
   ANSWERS: [
     {
       type: Schema.Types.ObjectId,
-      require: false,
+      ref: "atividade_generic_quiz_answer",
     },
   ],
 });
@@ -25,5 +25,6 @@ module.exports = {
     "atividade_generic_quiz_summary",
     atividadeGenericQuizSummarysSchema
   ),
+  populate: ["ANSWERS"],
   schema: atividadeGenericQuizSummarysSchema,
 };
