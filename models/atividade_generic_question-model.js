@@ -11,6 +11,11 @@ const questionSchema = new Schema({
     type: String,
     require: true,
   },
+  IS_MULTIPLE: {
+    type: Boolean,
+    require: false,
+    default: false,
+  },
   PRESET_VALUES: [
     {
       type: String,

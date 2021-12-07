@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+var deepPopulate = require("mongoose-deep-populate")(mongoose);
 const { Schema } = mongoose;
 
 const atividadeCentroSchema = new Schema({
@@ -31,6 +32,11 @@ const atividadeCentroSchema = new Schema({
     required: false,
   },
 });
+
+atividadeCentroSchema.plugin(
+  deepPopulate
+  // options /* more on options below */
+);
 
 module.exports = {
   model: mongoose.model("atividade_centro", atividadeCentroSchema),

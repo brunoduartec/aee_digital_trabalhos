@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+var deepPopulate = require("mongoose-deep-populate")(mongoose);
 const { Schema } = mongoose;
 
 const participantesSchema = new Schema({
@@ -7,6 +8,11 @@ const participantesSchema = new Schema({
     require: true,
   },
 });
+
+participantesSchema.plugin(
+  deepPopulate
+  // options /* more on options below */
+);
 
 module.exports = {
   model: mongoose.model("participante", participantesSchema),

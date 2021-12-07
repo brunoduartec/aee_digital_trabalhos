@@ -2,31 +2,33 @@ const mongoose = require("mongoose");
 var deepPopulate = require("mongoose-deep-populate")(mongoose);
 const { Schema } = mongoose;
 
-const atividadeSchema = new Schema({
-  NOME_ATIVIDADE: {
+const passSchema = new Schema({
+  user: {
     type: String,
     require: true,
   },
-  RECEIVER_ALIAS: {
+  pass: {
     type: String,
     require: true,
   },
-  ATOR_ALIAS: {
-    type: String,
-    require: true,
-  },
-  COORDENADOR_ALIAS: {
+  groups: [
+    {
+      type: String,
+      require: true,
+    },
+  ],
+  scope_id: {
     type: String,
     require: true,
   },
 });
 
-atividadeSchema.plugin(
+passSchema.plugin(
   deepPopulate
   // options /* more on options below */
 );
 
 module.exports = {
-  model: mongoose.model("atividade", atividadeSchema),
-  schema: atividadeSchema,
+  model: mongoose.model("pass", passSchema),
+  schema: passSchema,
 };

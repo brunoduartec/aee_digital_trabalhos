@@ -1,16 +1,6 @@
 const mongoose = require("mongoose");
+var deepPopulate = require("mongoose-deep-populate")(mongoose);
 const { Schema } = mongoose;
-
-const participantesSchema = new Schema({
-  TIPO: {
-    type: Schema.Types.ObjectId,
-    ref: "participante",
-  },
-  QUANTIDADE: {
-    type: Number,
-    require: true,
-  },
-});
 
 const atividadeCentroSummarySchema = new Schema({
   CENTRO_ID: {
@@ -21,10 +11,33 @@ const atividadeCentroSummarySchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "atividade",
   },
-  ATUADORES_HABILITADOS: [participantesSchema],
-  ATUADORES: [participantesSchema],
-  RECEPTORES: [participantesSchema],
+  ATUADORES_HABILITADOS: [
+    {
+      type: Schema.Types.ObjectId,
+      require: true,
+      ref: "participante",
+    },
+  ],
+  ATUADORES: [
+    {
+      type: Schema.Types.ObjectId,
+      require: true,
+      ref: "participante",
+    },
+  ],
+  RECEPTORES: [
+    {
+      type: Schema.Types.ObjectId,
+      require: true,
+      ref: "participante",
+    },
+  ],
 });
+
+atividadeCentroSummarySchema.plugin(
+  deepPopulate
+  // options /* more on options below */
+);
 
 module.exports = {
   model: mongoose.model(
