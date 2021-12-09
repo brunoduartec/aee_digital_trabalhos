@@ -12,6 +12,7 @@ services:
       - "3100:3100"
     networks:
       - aee_digital_backend
+      - aee_trabalho_db
     volumes:
       - .:/usr/app
     depends_on:
@@ -26,7 +27,7 @@ services:
     ports:
       - "3110:27017"
     networks:
-      - aee_digital_backend
+      - aee_trabalho_db
     restart: always
   mongo-express:
     image: mongo-express
@@ -38,9 +39,12 @@ services:
     ports:
       - "30101:8081"
     networks:
-      - aee_digital_backend
+      - aee_trabalho_db
     restart: always
 networks:
   aee_digital_backend:
     name: aee_digital_backend
+    driver: bridge
+  aee_trabalho_db:
+    name: aee_trabalho_db
     driver: bridge
