@@ -10,7 +10,7 @@ const atividadeGenericQuizSchema = new Schema({
   QUESTIONS: [
     {
       type: Schema.Types.ObjectId,
-      ref: "atividade_generic_question",
+      ref: "atividade_generic_group_question",
     },
   ],
 });
@@ -23,5 +23,5 @@ atividadeGenericQuizSchema.plugin(
 module.exports = {
   model: mongoose.model("atividade_generic_quiz", atividadeGenericQuizSchema),
   schema: atividadeGenericQuizSchema,
-  populate: ["QUESTIONS"],
+  populate: ["QUESTIONS", "QUESTIONS.GROUP"],
 };

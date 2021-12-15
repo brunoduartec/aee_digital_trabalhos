@@ -1,3 +1,4 @@
+var mongodb = require('mongodb');
 module.exports = function makeDb(ModelFactory) {
   return Object.freeze({
     add,
@@ -14,14 +15,14 @@ module.exports = function makeDb(ModelFactory) {
 
     searchParams = {};
     for (let index = 0; index < items.length; index++) {
-      const item = items[index];
+      let item = items[index];
       const value = values[index];
       if (item == "ID") {
         item = "_id";
       }
 
       if (item.toLocaleLowerCase().includes("_id")) {
-        searchParams[item] = value;
+        searchParams[item] = new mongodb.ObjectID(value.toString());
       } else {
         searchParams[item] = { $regex: value };
       }

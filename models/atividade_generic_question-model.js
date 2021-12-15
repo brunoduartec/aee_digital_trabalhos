@@ -22,6 +22,14 @@ const questionSchema = new Schema({
       require: false,
     },
   ],
+  VALIDATION:{
+    type: String,
+    require: false,
+  },
+  SIZE:{
+    type: String,
+    require: false,
+  }
 });
 
 questionSchema.plugin(

@@ -17,7 +17,7 @@ const answerSchema = new Schema({
   },
   ANSWER: {
     type: String,
-    require: true,
+    require: false,
   },
 });
 

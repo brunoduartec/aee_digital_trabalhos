@@ -33,5 +33,5 @@ atividadeGenericFormSchema.plugin(
 module.exports = {
   model: mongoose.model("atividade_generic_form", atividadeGenericFormSchema),
   schema: atividadeGenericFormSchema,
-  populate: ["PAGES.QUIZES", "PAGES.QUIZES.QUESTIONS"],
+  populate: ["PAGES.QUIZES", "PAGES.QUIZES.QUESTIONS", "PAGES.QUIZES.QUESTIONS.GROUP"],
 };
