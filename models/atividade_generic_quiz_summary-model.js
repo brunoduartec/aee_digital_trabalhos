@@ -13,6 +13,10 @@ const atividadeGenericQuizSummarysSchema = new Schema({
       ref: "atividade_generic_quiz_answer",
     },
   ],
+  LASTMODIFIED:{
+    type: Date,
+    require: true
+  }
 });
 
 atividadeGenericQuizSummarysSchema.plugin(
