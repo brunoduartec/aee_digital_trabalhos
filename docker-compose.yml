@@ -14,7 +14,7 @@ services:
       - aee_digital_backend
       - aee_trabalho_db
     volumes:
-      - .:/app
+      - .:/usr/app
     depends_on:
       - "mongo"
     links:
