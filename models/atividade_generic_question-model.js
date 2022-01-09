@@ -16,6 +16,11 @@ const questionSchema = new Schema({
     require: false,
     default: false,
   },
+  IS_REQUIRED: {
+    type: Boolean,
+    require: false,
+    default: false,
+  },
   PRESET_VALUES: [
     {
       type: String,
