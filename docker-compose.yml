@@ -17,8 +17,10 @@ services:
       - .:/usr/app
     depends_on:
       - "mongo"
+      - "redis"
     links:
       - mongo
+      - redis
     restart: always
   mongo:
     image: mongo
@@ -41,6 +43,16 @@ services:
     networks:
       - aee_trabalho_db
     restart: always
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    hostname: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - aee_digital_backend
+    volumes:
+      - ./data/cache:/var/lib/postgresql/data
 networks:
   aee_digital_backend:
     name: aee_digital_backend
