@@ -11,7 +11,7 @@ module.exports = class Cache{
             return this.constructor.instance
         }
 
-        this.client = redis.createClient({ url: 'redis://redis:6379' });
+        this.client = redis.createClient({ url: `redis://${redisConf.host}:${redisConf.port}` });
         this.constructor.instance = this
     }
 
@@ -26,8 +26,9 @@ module.exports = class Cache{
     }
 
     async get(key){
-        const value = await this.client.get(key);
-        return value
+        // const value = await this.client.get(key);
+        // return value
+        return null
     }
 
     async set(key,value){

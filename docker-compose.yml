@@ -45,10 +45,9 @@ services:
     restart: always
   redis:
     image: redis
-    command: redis-server --appendonly yes
-    container_name: redis
+    command: redis-server --appendonly yes --port 3101
     ports:
-      - 6379:6379
+      - "3101:3101"
     networks:
       - aee_digital_backend
     volumes:
