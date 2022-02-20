@@ -6,17 +6,23 @@ const redis = require("redis")
 
 module.exports = class Cache{
     constructor(){
+        
         if(this.constructor.instance){
             return this.constructor.instance
         }
 
-        this.client = redis.createClient(redisConf.port, redisConf.host);
+        this.client = redis.createClient({ url: 'redis://redis:6379' });
         this.constructor.instance = this
     }
 
     async connect(){
-        await this.client.connect();
-        console.log("Redis connected")
+        try {
+            await this.client.connect();
+            console.log("Redis is connected")
+            
+        } catch (error) {
+            console.log("Error Connecting to Redis", error)
+        }
     }
 
     async get(key){
@@ -27,6 +33,13 @@ module.exports = class Cache{
     async set(key,value){
         await this.client.set(key, JSON.stringify(value), {
             EX: 60*60,
+            NX: true
+          });
+    }
+
+    async remove(key, value){
+        await this.client.set(key, JSON.stringify(value), {
+            EX: 0,
             NX: true
           });
     }
