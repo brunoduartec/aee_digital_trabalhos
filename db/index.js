@@ -17,25 +17,6 @@ module.exports = function makeDb(ModelFactory) {
     update,
   });
 
-  function getParamsParsed(params) {
-    let paramsParsed = "";
-  
-    let keys = Object.keys(params);
-  
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index];
-      const value = params[key];
-  
-      if (value) {
-        paramsParsed = paramsParsed.concat(`&${key}=${decodeURIComponent(value)}`);
-      }
-    }
-  
-    console.log("getParamsParsed", paramsParsed.substring(1));
-  
-    return paramsParsed.substring(1);
-  }
-
   function formatParams(searchParams) {
     let items = Object.keys(searchParams);
     let values = Object.values(searchParams);
