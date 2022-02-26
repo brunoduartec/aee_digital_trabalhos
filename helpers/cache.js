@@ -2,15 +2,12 @@ const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("../env.json")[env];
 const redisConf = config.redis
 
+
+
 const redis = require("redis")
 
 module.exports = class Cache{
     constructor(){
-        
-        if(this.constructor.instance){
-            return this.constructor.instance
-        }
-
         this.client = redis.createClient({ url: `redis://${redisConf.host}:${redisConf.port}` });
         this.constructor.instance = this
     }
@@ -26,23 +23,24 @@ module.exports = class Cache{
     }
 
     async get(key){
-        // const value = await this.client.get(key);
-        // return value
-        return null
+        const value = await this.client.get(key);
+        return value;
     }
 
     async set(key,value){
         await this.client.set(key, JSON.stringify(value), {
-            EX: 60*60,
+            EX: 24*60*60,
             NX: true
           });
     }
 
-    async remove(key, value){
-        await this.client.set(key, JSON.stringify(value), {
-            EX: 0,
-            NX: true
-          });
+    async keys(keyPattern){
+        const keys = await this.client.keys(keyPattern)
+        return keys
+    }
+
+    async remove(key){
+        await this.client.expire(key, 0)
     }
 
 }

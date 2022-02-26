@@ -5,11 +5,7 @@ const cors = require("cors");
 const Connection = require("./db/connection")();
 const ModelFactory = require("./db/modelFactory");
 
-const Cache = require("./helpers/cache");
-const cache = new Cache();
-(async function(){
-  await cache.connect();
-})()
+
 
 const models = [
   "atividade_centro_summary",

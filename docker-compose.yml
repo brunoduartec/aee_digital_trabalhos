@@ -53,6 +53,17 @@ services:
     volumes:
       - ./data/cache:/var/lib/postgresql/data
     restart: always
+  redis-commander-trabalhos:
+    container_name: redis-commander-trabalhos
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+    - REDIS_HOSTS=redis:redis:3101
+    ports:
+    - "3102:8081"
+    networks:
+      - aee_digital_backend
 networks:
   aee_digital_backend:
     name: aee_digital_backend

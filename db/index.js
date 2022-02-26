@@ -1,6 +1,11 @@
 var mongodb = require('mongodb');
+
+
 const Cache = require("../helpers/cache");
 const cache = new Cache();
+(async function(){
+  await cache.connect();
+})()
 
 module.exports = function makeDb(ModelFactory) {
   return Object.freeze({
@@ -71,9 +76,14 @@ module.exports = function makeDb(ModelFactory) {
   async function solveItem(item, schemaObj) {
     if (schemaObj.ref) {
       const ref = schemaObj.ref;
-      const itemAdded = await add(ref, item);
-      const id = itemAdded._id.toString();
-      return id;
+      if(typeof item ==='object'){
+        const itemAdded = await add(ref, item);
+        const id = itemAdded._id.toString();
+        return id;
+      }
+      else{
+        return item
+      }
     }
     return item;
   }
@@ -113,6 +123,10 @@ module.exports = function makeDb(ModelFactory) {
 
   async function add(modelName, itemInfo) {
     try {
+
+      if(typeof itemInfo != 'object')
+      return;
+
       const Model = ModelFactory.getModel(modelName).model;
       const schema = ModelFactory.getModel(modelName).schema.obj;
 
@@ -120,18 +134,47 @@ module.exports = function makeDb(ModelFactory) {
 
       item = new Model(itemInfoConverted);
 
-      return await item.save();
+      const saved = await item.save();
+
+      cache.remove(`${modelName}`)
+      getItems(modelName);
+
+      return saved;
     } catch (error) {
+      console.log("Error Adding Item=>", error);
       throw error;
     }
   }
 
+  async function getInfoByCache(cachedItem, params){
+    let keys = Object.keys(params)
+
+    cachedItemParsed = JSON.parse(cachedItem)
+
+    const query = cachedItemParsed.filter(m=>{
+      let tryItem = true;
+
+      keys.forEach(key => {
+        let item = m[key]
+  
+        if(typeof m[key] != "string"){
+          item = JSON.stringify(m[key])
+        }
+        tryItem = tryItem && (item == params[key])
+      });
+
+      return tryItem
+    })
+    
+    return query
+  }
+
   async function findByItems(modelName, max, params) {
     try {
-      let paramsParsed = getParamsParsed(params)
-      const cachedItem = await cache.get(`${modelName}:${paramsParsed}`)
+      const cachedItem = await cache.get(`${modelName}`)
       if(cachedItem)
-        return JSON.parse(cachedItem)
+        return getInfoByCache(cachedItem, params)
+        
 
       console.log("findByItems=>", params);
       const modelInfo = ModelFactory.getModel(modelName);
@@ -144,6 +187,7 @@ module.exports = function makeDb(ModelFactory) {
       let populateTags = populateItems(populate);
 
       let item = await Model.find({}).deepPopulate(populateTags);
+      cache.set(`${modelName}`, item)
 
       item = item.filter((m) => {
         let validate = true;
@@ -167,9 +211,6 @@ module.exports = function makeDb(ModelFactory) {
 
         return validate;
       });
-
-      cache.set(`${modelName}:${paramsParsed}`, item)
-
       return item;
     } catch (error) {
       throw error;
@@ -190,7 +231,8 @@ module.exports = function makeDb(ModelFactory) {
       let items = await Model.find().deepPopulate(populateTags);
 
       if (items && items.length > 0) {
-        cache.set(`${modelName}`, items)
+          cache.set(`${modelName}`, items);
+
         return items;
       } else {
         return null;
@@ -205,6 +247,10 @@ module.exports = function makeDb(ModelFactory) {
       const Model = ModelInfo.model;
       conditions = formatParams(conditions);
       const result = await Model.deleteOne(conditions);
+
+      await cache.remove(`${modelName}`)
+      await getItems(modelName);
+
       return result;
     } catch (error) {
       throw error;
@@ -228,6 +274,9 @@ module.exports = function makeDb(ModelFactory) {
       conditions = formatParams(conditions);
 
       const result = await Model.updateOne(conditions, item, { upsert: true });
+
+      await cache.remove(`${modelName}`)
+      await getItems(modelName);
 
       return result;
     } catch (error) {
