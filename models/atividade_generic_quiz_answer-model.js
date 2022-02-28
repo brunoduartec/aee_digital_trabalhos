@@ -12,8 +12,9 @@ const answerSchema = new Schema({
     require: false,
   },
   QUESTION_ID: {
-    type: String,
-    require: true,
+    type: Schema.Types.ObjectId,
+    ref: "atividade_generic_question",
+    required: true
   },
   ANSWER: {
     type: String,
@@ -29,4 +30,5 @@ answerSchema.plugin(
 module.exports = {
   model: mongoose.model("atividade_generic_quiz_answer", answerSchema),
   schema: answerSchema,
+  populate: ["QUESTION_ID"],
 };
