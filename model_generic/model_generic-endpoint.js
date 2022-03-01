@@ -1,6 +1,9 @@
 const makeGeneric = require("./model_generic_entity");
 const logger = require("../helpers/logger");
 
+const Cache = require("../helpers/cache");
+const cache = new Cache();
+
 const {
   UniqueConstraintError,
   InvalidPropertyError,
@@ -119,6 +122,13 @@ module.exports = function makeModelGenericEndpointHandler({
         const result = makeGeneric(itemAdded, modelName);
         results.push(result);
       }
+
+      cache.remove(`${modelName}`)
+      let max = 10;
+      await modelGenericList.getItems({
+        max
+      });
+
       return {
         headers: {
           "Content-Type": "application/json",

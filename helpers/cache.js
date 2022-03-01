@@ -8,8 +8,12 @@ const redis = require("redis")
 
 module.exports = class Cache{
     constructor(){
+
+        if(this.constructor.instance)
+            return this.constructor.instance
+
+        this.constructor.instance = this;
         this.client = redis.createClient({ url: `redis://${redisConf.host}:${redisConf.port}` });
-        this.constructor.instance = this
     }
 
     async connect(){

@@ -4,9 +4,7 @@ const logger = require("../helpers/logger");
 
 const Cache = require("../helpers/cache");
 const cache = new Cache();
-(async function () {
-  await cache.connect();
-})()
+
 
 module.exports = function makeDb(ModelFactory) {
   return Object.freeze({
@@ -146,8 +144,6 @@ module.exports = function makeDb(ModelFactory) {
 
       const saved = await item.save();
 
-      cache.remove(`${modelName}`)
-      getItems(modelName);
 
       return saved;
     } catch (error) {

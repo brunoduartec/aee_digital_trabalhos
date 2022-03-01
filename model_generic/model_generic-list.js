@@ -34,7 +34,9 @@ module.exports = function makeModelGenericList({ database, modelName }) {
   async function add(model_genericInfo) {
     try {
       let model_generic = makeModelGeneric(model_genericInfo, modelName);
-      return await database.add(modelName, model_generic);
+      let added = await database.add(modelName, model_generic);
+
+      return added
     } catch (error) {
       logger.error(`model_generic:model_generic-list:add: ${error}`)
       throw error;
