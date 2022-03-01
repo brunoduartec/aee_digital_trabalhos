@@ -6,8 +6,5 @@ module.exports = function adaptRequest(req = {}) {
     queryParams: req.query,
     body: req.body,
   };
-
-  console.log("Handle", request);
-
   return Object.freeze(request);
 };

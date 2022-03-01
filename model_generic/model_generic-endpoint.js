@@ -1,4 +1,5 @@
 const makeGeneric = require("./model_generic_entity");
+const logger = require("../helpers/logger");
 
 const {
   UniqueConstraintError,
@@ -28,7 +29,8 @@ module.exports = function makeModelGenericEndpointHandler({
 
       default:
         let errorMessage = `${httpRequest.method} method not allowed.`;
-        console.log(errorMessage);
+        
+        logger.error(JSON.parse(errorMessage))
 
         return makeHttpError({
           statusCode: 405,

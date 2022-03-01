@@ -5,7 +5,7 @@ const cors = require("cors");
 const Connection = require("./db/connection")();
 const ModelFactory = require("./db/modelFactory");
 
-
+const logger = require("./helpers/logger");
 
 const models = [
   "atividade_centro_summary",
@@ -35,7 +35,7 @@ const app = express();
 app.options("*", cors()); // include before other routes
 
 app.use((req, res, next) => {
-  console.log("Acessou o Middleware!", req);
+  logger.info(`Acessou o Middleware! ${req}`);
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",

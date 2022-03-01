@@ -1,4 +1,6 @@
 const makeModelGeneric = require("./model_generic_entity");
+const logger = require("../helpers/logger");
+
 module.exports = function makeModelGenericList({ database, modelName }) {
   return Object.freeze({
     add,
@@ -19,7 +21,8 @@ module.exports = function makeModelGenericList({ database, modelName }) {
             let itemToPush = makeModelGeneric(item, modelName);
             output.push(itemToPush);
           } catch (error) {
-            console.log("Item falltando", error);
+            logger.error(`model_generic:model_generic-list:formatOutput: ${error}`)
+            throw error
           }
         });
       }
@@ -33,7 +36,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
       let model_generic = makeModelGeneric(model_genericInfo, modelName);
       return await database.add(modelName, model_generic);
     } catch (error) {
-      console.log(error);
+      logger.error(`model_generic:model_generic-list:add: ${error}`)
       throw error;
     }
   }
@@ -48,7 +51,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
       model_generic_info = formatOutput(model_generic_info);
       return model_generic_info;
     } catch (error) {
-      console.log(error);
+      logger.error(`model_generic:model_generic-list:findByItems: ${error}`)
       throw error;
     }
   }
@@ -59,7 +62,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
       let model_generics_info = formatOutput(items);
       return model_generics_info;
     } catch (error) {
-      console.log(error);
+      logger.error(`model_generic:model_generic-list:getItems: ${error}`)
       throw error;
     }
   }
@@ -67,7 +70,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
     try {
       return await database.remove(modelName, searchParams);
     } catch (error) {
-      console.log(error);
+      logger.error(`model_generic:model_generic-list:remove: ${error}`)
       throw error;
     }
   }
@@ -79,7 +82,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
         searchParams
       );
     } catch (error) {
-      console.log(error);
+      logger.error(`model_generic:model_generic-list:replace: ${error}`)
       throw error;
     }
   }
@@ -87,7 +90,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
     try {
       return await database.update(modelName, model_generic_info, searchParams);
     } catch (error) {
-      console.log(error);
+      logger.error(`model_generic:model_generic-list:update: ${error}`)
       throw error;
     }
   }

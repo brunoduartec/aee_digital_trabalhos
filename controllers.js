@@ -1,4 +1,5 @@
 const adaptRequest = require("./helpers/adapt-request");
+const logger = require("./helpers/logger");
 
 function getModelName(path) {
   let modelName = path.slice(8, path.length);
@@ -18,10 +19,11 @@ module.exports.generic_controller = function genericController(req, res) {
 
   handleGeneric(httpRequest)
     .then(({ headers, statusCode, data }) => {
+      logger.info(`controller:handleGeneric`);
       res.set(headers).status(statusCode).send(data);
     })
     .catch((e) => {
-      console.log(e);
+      logger.error(`controller:handleGeneric: ${e}`)
       res.status(500).end();
     });
 };

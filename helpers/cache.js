@@ -2,7 +2,7 @@ const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("../env.json")[env];
 const redisConf = config.redis
 
-
+const logger = require("./logger");
 
 const redis = require("redis")
 
@@ -15,10 +15,11 @@ module.exports = class Cache{
     async connect(){
         try {
             await this.client.connect();
-            console.log("Redis is connected")
+            logger.info("Redis is connected")
             
         } catch (error) {
-            console.log("Error Connecting to Redis", error)
+            logger.error(`Error Connecting to Redis: ${error}`)
+            await setTimeout(connect, 5000);
         }
     }
 
