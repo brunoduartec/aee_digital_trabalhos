@@ -11,7 +11,7 @@ const atividadeGenericQuizSummarysSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "atividade_generic_quiz_answer",
-    },
+    }
   ],
   LASTMODIFIED:{
     type: Date,
@@ -29,6 +29,6 @@ module.exports = {
     "atividade_generic_quiz_summary",
     atividadeGenericQuizSummarysSchema
   ),
-  populate: ["ANSWERS"],
   schema: atividadeGenericQuizSummarysSchema,
+  populate: ["ANSWERS", "ANSWERS.QUESTION_ID"],
 };
