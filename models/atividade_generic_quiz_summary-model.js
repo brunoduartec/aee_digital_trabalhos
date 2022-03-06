@@ -29,6 +29,5 @@ module.exports = {
     "atividade_generic_quiz_summary",
     atividadeGenericQuizSummarysSchema
   ),
-  schema: atividadeGenericQuizSummarysSchema,
-  populate: ["ANSWERS", "ANSWERS.QUESTION_ID"],
+  schema: atividadeGenericQuizSummarysSchema
 };
