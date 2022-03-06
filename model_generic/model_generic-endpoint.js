@@ -123,7 +123,7 @@ module.exports = function makeModelGenericEndpointHandler({
         results.push(result);
       }
 
-      await cache.remove(`${modelName}:*`)
+      await cache.remove(`${modelName}*`)
       let max = 10;
       await modelGenericList.getItems({
         max

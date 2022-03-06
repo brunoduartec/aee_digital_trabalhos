@@ -172,7 +172,7 @@ module.exports = function makeDb(ModelFactory) {
 
   function getSubItem(m, queryParam) {
     try {
-      logger.info(`db:index:getSubItem: ${JSON.parse(m)} : ${squeryParam}`)
+      logger.info(`db:index:getSubItem: ${JSON.stringify(m)} : ${queryParam}`)
       let paramsSplited = queryParam.split(".");
   
       itemToSearch = m[paramsSplited[0]];
@@ -191,6 +191,13 @@ module.exports = function makeDb(ModelFactory) {
   async function findByItems(modelName, max, params) {
     try {
       logger.info(`db:index:findByItems: ${modelName} : ${params}`)
+
+      let paramsParsed = getParamsParsed(params)
+      const cachedItem = await cache.get(`${modelName}:${paramsParsed}`)
+      if(cachedItem){
+        return JSON.parse(cachedItem)
+      }
+
       const modelInfo = ModelFactory.getModel(modelName);
       const Model = modelInfo.model;
       const populate = modelInfo.populate;
@@ -199,17 +206,10 @@ module.exports = function makeDb(ModelFactory) {
       let values = Object.values(params);
 
       let populateTags = populateItems(populate);
-
-      const cachedItem = await cache.get(`${modelName}:${getParamsParsed(params)}`)
-      let item;
-      if(cachedItem){
-        item = JSON.parse(cachedItem)
-      }
-      else{
-        item = await Model.find({}).deepPopulate(populateTags);
-        cache.set(`${modelName}:${getParamsParsed(params)}`, item)
-      }
-
+      
+      let item = await Model.find({})
+      .deepPopulate(populateTags);
+      
       item = item.filter((m) => {
         let validate = true;
 
@@ -227,6 +227,7 @@ module.exports = function makeDb(ModelFactory) {
         return validate;
       });
 
+      cache.set(`${modelName}:${paramsParsed}`, item)
       return item;
     } catch (error) {
       logger.error(`db:index:findByItems: ${error}`)
@@ -268,7 +269,7 @@ module.exports = function makeDb(ModelFactory) {
       conditions = formatParams(conditions);
       const result = await Model.deleteOne(conditions);
 
-      await cache.remove(`${modelName}:*`)
+      await cache.remove(`${modelName}*`)
       await getItems(modelName);
 
       return result;
@@ -285,7 +286,7 @@ module.exports = function makeDb(ModelFactory) {
       conditions = formatParams(conditions);
       const result = await Model.replaceOne(conditions, item);
 
-      await cache.remove(`${modelName}:*`)
+      await cache.remove(`${modelName}*`)
       await getItems(modelName);
 
       return result;
@@ -305,7 +306,7 @@ module.exports = function makeDb(ModelFactory) {
         upsert: true
       });
 
-      await cache.remove(`${modelName}:*`)
+      await cache.remove(`${modelName}*`)
       await getItems(modelName);
 
       return result;
