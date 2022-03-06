@@ -44,8 +44,12 @@ module.exports = class Cache{
         return keys
     }
 
-    async remove(key){
-        await this.client.expire(key, 0)
+    async remove(pattern){
+        let keys = await this.client.keys(pattern)
+
+        for (const key of keys) {
+            this.client.expire(key,0);
+        }
     }
 
 }

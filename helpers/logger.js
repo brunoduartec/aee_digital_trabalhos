@@ -30,7 +30,8 @@ transports:[
         },
         // A collection to save json formatted logs
         collection: 'server_logs',
-        cappedMax: 10000,
+        cappedMax: 100,
+        capped: true,
         format: format.combine(
         format.timestamp(),
         // Convert logs to a json format
