@@ -208,7 +208,7 @@ module.exports = function makeDb(ModelFactory) {
       let populateTags = populateItems(populate);
       
       let item = await Model.find({})
-      .deepPopulate(populateTags);
+      .deepPopulate(populateTags).lean();
       
       item = item.filter((m) => {
         let validate = true;
@@ -247,7 +247,7 @@ module.exports = function makeDb(ModelFactory) {
       const populate = modelInfo.populate;
 
       let populateTags = populateItems(populate);
-      let items = await Model.find().deepPopulate(populateTags);
+      let items = await Model.find().deepPopulate(populateTags).lean();
 
       if (items && items.length > 0) {
         cache.set(`${modelName}`, items);

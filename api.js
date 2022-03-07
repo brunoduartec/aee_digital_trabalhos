@@ -57,6 +57,16 @@ app.use(bodyParser.json());
 
 app.use("/api/v1/healthcheck", require("./healthcheck"));
 
+app.delete("/cache", async function(req, res){
+  const {key} = req.body
+
+  let info = await cache.remove(key);
+
+  res.json(info)
+})
+
+
+
 app.get("/", function (req, res) {
   const package = require("./package.json");
   const versionInfo = {
