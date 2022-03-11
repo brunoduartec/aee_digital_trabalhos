@@ -270,7 +270,7 @@ module.exports = function makeDb(ModelFactory) {
       const result = await Model.deleteOne(conditions);
 
       await cache.remove(`${modelName}*`)
-      await getItems(modelName);
+      getItems(modelName);
 
       return result;
     } catch (error) {
@@ -287,7 +287,7 @@ module.exports = function makeDb(ModelFactory) {
       const result = await Model.replaceOne(conditions, item);
 
       await cache.remove(`${modelName}*`)
-      await getItems(modelName);
+      getItems(modelName);
 
       return result;
     } catch (error) {
@@ -307,7 +307,7 @@ module.exports = function makeDb(ModelFactory) {
       });
 
       await cache.remove(`${modelName}*`)
-      await getItems(modelName);
+      getItems(modelName);
 
       return result;
     } catch (error) {
