@@ -7,6 +7,11 @@ const atividadeGenericQuizSummarysSchema = new Schema({
     type: String,
     require: true,
   },
+  FORM_ID:{
+    type: Schema.Types.ObjectId,
+    ref: "atividade_generic_form",
+    required: false
+  },
   ANSWERS: [
     {
       type: Schema.Types.ObjectId,
