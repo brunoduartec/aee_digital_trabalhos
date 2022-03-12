@@ -19,7 +19,7 @@ const passSchema = new Schema({
   ],
   scope_id: {
     type: String,
-    require: true,
+    require: false,
   },
 });
 
