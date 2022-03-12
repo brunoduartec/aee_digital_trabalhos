@@ -297,12 +297,14 @@ module.exports = function makeDb(ModelFactory) {
   }
   async function update(modelName, item, conditions) {
     try {
+
+      conditions = conditions || {}
       logger.info(`db:index:update: ${modelName} : ${item} : ${conditions}`)
       const ModelInfo = ModelFactory.getModel(modelName);
       const Model = ModelInfo.model;
       conditions = formatParams(conditions);
 
-      const result = await Model.updateOne(conditions, item, {
+      const result = await Model.updateMany(conditions, item, {
         upsert: true
       });
 
