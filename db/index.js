@@ -304,7 +304,7 @@ module.exports = function makeDb(ModelFactory) {
       const Model = ModelInfo.model;
       conditions = formatParams(conditions);
 
-      const result = await Model.updateOne(conditions, item, {
+      const result = await Model.updateMany(conditions, item, {
         upsert: true
       });
 
