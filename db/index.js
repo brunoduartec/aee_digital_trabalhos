@@ -308,8 +308,8 @@ module.exports = function makeDb(ModelFactory) {
         upsert: true
       });
 
-      // await cache.remove(`${modelName}*`)
-      // getItems(modelName);
+      await cache.remove(`${modelName}*`)
+      getItems(modelName);
 
       return result;
     } catch (error) {
