@@ -1,0 +1,34 @@
+// MongoDB Playground
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+const question_id = [
+    "61df432fdf23b90014a94578",
+    "61df432fdf23b90014a9457f", 
+    "61df432fdf23b90014a9457c", 
+    "61df432fdf23b90014a9457a"]
+const response = " "
+
+// The current database to use.
+use('aee');
+
+// Search for documents in the current collection.
+
+question_id.forEach((id)=>{
+    console.log(`Apagando ${id}`)
+    db.getCollection('atividade_generic_quiz_answers')
+    .updateMany(
+    { "QUESTION_ID": {$regex:id}},
+    { $set: { "ANSWER": response }}
+    )
+
+     db.getCollection('atividade_generic_quiz_answers')
+    .updateMany(
+    { "QUESTION_ID": ObjectId(id)},
+    { $set: { "ANSWER": response }}
+    )
+})
+
+
+// db.getCollection('atividade_generic_quiz_answers')
+//   .find(
+//    { "QUESTION_ID": {$regex:question_id}}
+//   )

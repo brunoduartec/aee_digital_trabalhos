@@ -23,6 +23,8 @@ const models = [
   "atividade_generic_question",
   "atividade_generic_quiz",
   "atividade_generic_quiz_summary",
+  "atividade_generic_quiz_summary_info",
+  "atividade_generic_quiz_summary_response",
   "pessoa",
   "pass",
   "atividade",
@@ -57,8 +59,10 @@ app.use(bodyParser.json());
 
 app.use("/api/v1/healthcheck", require("./healthcheck"));
 
-app.delete("/cache", async function(req, res){
-  const {key} = req.body
+app.delete("/cache", async function (req, res) {
+  const {
+    key
+  } = req.body
 
   let info = await cache.remove(key);
 
