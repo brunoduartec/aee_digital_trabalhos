@@ -19,18 +19,14 @@ module.exports = function makeModelGenericEndpointHandler({
     switch (httpRequest.method) {
       case "POST":
         return post(httpRequest);
-        break;
       case "GET":
         return get(httpRequest);
-        break;
       case "DELETE":
         return remove(httpRequest);
-        break;
       case "PUT":
         return update(httpRequest);
-        break;
 
-      default:
+      default:{
         let errorMessage = `${httpRequest.method} method not allowed.`;
         
         logger.error(JSON.parse(errorMessage))
@@ -39,7 +35,8 @@ module.exports = function makeModelGenericEndpointHandler({
           statusCode: 405,
           errorMessage: errorMessage,
         });
-        break;
+
+      }
     }
   };
 
@@ -56,11 +53,23 @@ module.exports = function makeModelGenericEndpointHandler({
     return searchParams;
   }
 
+  function formatFieldsParams(fields){
+    return fields.split(",")
+  }
+
+
   async function get(httpRequest) {
     const { id } = httpRequest.pathParams || {};
     const { max, ...params } = httpRequest.queryParams || {};
+    let fields 
+
+    if(params.fields){
+      fields= formatFieldsParams(params.fields)
+      delete params.fields
+    }
 
     let searchParams = formatSearchParam(id, params);
+
     let hasParams = searchParams != null;
     let result = [];
 
@@ -68,10 +77,12 @@ module.exports = function makeModelGenericEndpointHandler({
       result = await modelGenericList.findByItems({
         max,
         searchParams,
+        fields
       });
     } else {
       result = await modelGenericList.getItems({
         max,
+        fields
       });
     }
 
@@ -152,7 +163,7 @@ module.exports = function makeModelGenericEndpointHandler({
 
   async function remove(httpRequest) {
     const { id } = httpRequest.pathParams || {};
-    const { max, ...params } = httpRequest.queryParams || {};
+    const { ...params } = httpRequest.queryParams || {};
 
     let searchParams = formatSearchParam(id, params);
 
@@ -168,7 +179,7 @@ module.exports = function makeModelGenericEndpointHandler({
 
   async function update(httpRequest) {
     const { id } = httpRequest.pathParams || {};
-    const { max, ...params } = httpRequest.queryParams || {};
+    const {...params } = httpRequest.queryParams || {};
 
     let searchParams = formatSearchParam(id, params);
 

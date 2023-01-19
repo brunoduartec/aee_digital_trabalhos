@@ -1,9 +1,10 @@
 const swaggerUI = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+
 const swaggerDocument = require('../swagger.json');
 
+const envconfig = require("./envconfig")
+const env = envconfig.NODE_ENV;
 
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "development";
 const config = require('../env.json')[env]
 
 swaggerDocument.host = `${config.host}:${config.port}`

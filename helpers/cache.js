@@ -1,4 +1,6 @@
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const envconfig = require("../helpers/envconfig")
+const env = envconfig.NODE_ENV;
+
 const config = require("../env.json")[env];
 const redisConf = config.redis
 

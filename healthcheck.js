@@ -1,5 +1,5 @@
 
-async function check(_req, res, _next){
+async function check(_req, res){
 	// optional: add further things to check (e.g. connecting to dababase)
 	const healthcheck = {
 		uptime: process.uptime(),

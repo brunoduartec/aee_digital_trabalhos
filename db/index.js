@@ -1,6 +1,8 @@
 var mongodb = require('mongodb');
 const logger = require("../helpers/logger");
 
+const commonHelper = require("../helpers/common.helper")
+
 
 const Cache = require("../helpers/cache");
 const cache = new Cache();
@@ -159,7 +161,7 @@ module.exports = function makeDb(ModelFactory) {
 
       let itemInfoConverted = await traverser(schema, itemInfo);
 
-      item = new Model(itemInfoConverted);
+      let item = new Model(itemInfoConverted);
 
       const saved = await item.save();
 
@@ -175,7 +177,7 @@ module.exports = function makeDb(ModelFactory) {
       logger.info(`db:index:getSubItem: ${JSON.stringify(m)} : ${queryParam}`)
       let paramsSplited = queryParam.split(".");
   
-      itemToSearch = m[paramsSplited[0]];
+      let itemToSearch = m[paramsSplited[0]];
   
       if (itemToSearch && paramsSplited.length > 1) {
         itemToSearch = itemToSearch[paramsSplited[1]];
@@ -188,12 +190,20 @@ module.exports = function makeDb(ModelFactory) {
     }
   }
 
-  async function findByItems(modelName, max, params) {
+  async function findByItems(modelName, params, fields) {
     try {
       logger.info(`db:index:findByItems: ${modelName} : ${params}`)
 
       let paramsParsed = getParamsParsed(params)
-      const cachedItem = await cache.get(`${modelName}:${paramsParsed}`)
+
+      let cacheKey
+      if(fields){
+        cacheKey = `${modelName}:${paramsParsed}:${fields.toString()}`
+      }else{
+        cacheKey = `${modelName}:${paramsParsed}`
+      }
+
+      const cachedItem = await cache.get(cacheKey)
       if(cachedItem){
         return JSON.parse(cachedItem)
       }
@@ -202,44 +212,55 @@ module.exports = function makeDb(ModelFactory) {
       const Model = modelInfo.model;
       const populate = modelInfo.populate;
 
-      let items = Object.keys(params);
-      let values = Object.values(params);
+      let itemKeys = Object.keys(params);
+      let itemValues = Object.values(params);
 
       let populateTags = populateItems(populate);
       
-      let item = await Model.find({})
+      let items = await Model.find({})
       .deepPopulate(populateTags).lean();
-      
-      item = item.filter((m) => {
+
+      items = items.filter((m) => {
         let validate = true;
 
-        for (let index = 0; index < items.length; index++) {
-          const it = items[index];
+        for (let index = 0; index < itemKeys.length; index++) {
+          const it = itemKeys[index];
 
-          itemToSearch = getSubItem(m,it);
+          let itemToSearch = getSubItem(m,it);
 
           validate =
             validate &&
             itemToSearch &&
-            itemToSearch.toString().includes(values[index]);
+            itemToSearch.toString().includes(itemValues[index]);
         }
 
         return validate;
       });
 
-      cache.set(`${modelName}:${paramsParsed}`, item)
-      return item;
+      if(fields){
+        items = commonHelper.getArrayPickingParams(items, fields)
+      }
+      cache.set(cacheKey, items);
+
+      return items;
     } catch (error) {
       logger.error(`db:index:findByItems: ${error}`)
       throw error;
     }
   }
-  async function getItems(modelName, max) {
+  async function getItems(modelName, fields) {
     try {
       logger.info(`db:index:getItems: ${modelName}`)
       const modelInfo = ModelFactory.getModel(modelName);
 
-      const cachedItem = await cache.get(`${modelName}`)
+      let cacheKey
+      if(fields){
+        cacheKey = `${modelName}:${fields.toString()}`
+      }else{
+        cacheKey = `${modelName}`
+      }
+
+      const cachedItem = await cache.get(cacheKey)
       if (cachedItem)
         return JSON.parse(cachedItem)
 
@@ -251,6 +272,11 @@ module.exports = function makeDb(ModelFactory) {
 
       if (items && items.length > 0) {
         cache.set(`${modelName}`, items);
+
+        if(fields){
+          items = commonHelper.getArrayPickingParams(items, fields)
+        }
+        cache.set(cacheKey, items)
 
         return items;
       } else {
