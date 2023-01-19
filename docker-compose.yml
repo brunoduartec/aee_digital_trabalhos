@@ -6,7 +6,7 @@ services:
       - NODE_ENV=development
     build: .
     command: npm start
-    image: aee_digital_trabalhos
+    image: docker.pkg.github.com/brunoduartec/aee_digital_trabalhos
     container_name: aee_digital_trabalhos
     ports:
       - "3100:3100"
