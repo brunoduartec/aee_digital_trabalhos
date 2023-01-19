@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const Connection = require("./db/connection")();
+require("./db/connection")();
 
 const Cache = require("./helpers/cache");
 const cache = new Cache();

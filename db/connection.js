@@ -1,12 +1,13 @@
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const envconfig = require("../helpers/envconfig")
+const env = envconfig.NODE_ENV;
 const config = require("../env.json")[env];
 
-mongoConfig = config.mongo;
+const mongoConfig = config.mongo;
 const logger = require("../helpers/logger");
 const mongoose = require("mongoose");
 const connection = `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}`;
 
-hasConnected = false;
+let hasConnected = false;
 
 const connectWithRetry = (callback) => {
   if (hasConnected) return;

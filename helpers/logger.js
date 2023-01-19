@@ -1,8 +1,10 @@
 const { createLogger, format, transports } = require('winston');
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const envconfig = require("./envconfig")
+const env = envconfig.NODE_ENV;
+
 const config = require("../env.json")[env];
 
-mongoConfig = config.mongo;
+const mongoConfig = config.mongo;
 const connection = `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}`;
 
 // Import mongodb

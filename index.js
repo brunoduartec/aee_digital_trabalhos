@@ -3,12 +3,14 @@ const http = require("http");
 const api = require("./api")();
 const logger = require("./helpers/logger");
 
-const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
+const envconfig = require("./helpers/envconfig")
+const env = envconfig.NODE_ENV;
+
 const config = require("./env.json")[env];
 
 logger.info(`ENVIRONMENT => ${env}`)
 
-const port = process.env.PORT || config.port;
+const port = envconfig.PORT || config.port;
 
 let server_http = http.Server(api);
 server_http.listen(port, "0.0.0.0", function () {
