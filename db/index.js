@@ -18,6 +18,17 @@ module.exports = function makeDb(ModelFactory) {
     update,
   });
 
+  function formatFieldParams(fieldParams){
+    let paramsParsed = {}
+
+    for (let index = 0; index < fieldParams.length; index++) {
+      const element = fieldParams[index];
+      paramsParsed[element] = 1
+    }
+
+    return paramsParsed
+  }
+
   function formatParams(searchParams) {
     try {
       let items = Object.keys(searchParams);
@@ -190,94 +201,119 @@ module.exports = function makeDb(ModelFactory) {
     }
   }
 
-  async function findByItems(modelName, params, fields) {
+  async function findByItems(modelName, params, fieldParams) {
     try {
       logger.info(`db:index:findByItems: ${modelName} : ${params}`)
 
       let paramsParsed = getParamsParsed(params)
+      let cachedItem;
 
-      let cacheKey
-      if(fields){
-        cacheKey = `${modelName}:${paramsParsed}:${fields.toString()}`
+      if(fieldParams){
+        cachedItem = await cache.get(`${modelName}:${paramsParsed}:${fieldParams}`);
+        if(cachedItem)return JSON.parse(cachedItem)
       }else{
-        cacheKey = `${modelName}:${paramsParsed}`
-      }
+        cachedItem = await cache.get(`${modelName}:${paramsParsed}`);
+        if (cachedItem){
+          let  cacheParsed = JSON.parse(cachedItem);
+          if(fieldParams){
+            let fieldParamsParsed = formatFieldParams(fieldParams)
+            cacheParsed = cacheParsed.map((m)=>{
+              const item = {}
+  
+              fieldParamsParsed.forEach(field => {
+                item[field] = m[field]
+              });
+              return item
+            })
 
-      const cachedItem = await cache.get(cacheKey)
-      if(cachedItem){
-        return JSON.parse(cachedItem)
+            cache.set(`${modelName}:${paramsParsed}:${fieldParams}`, cacheParsed);
+            return cacheParsed
+
+          }else{
+            return cacheParsed
+          }
+        }
       }
 
       const modelInfo = ModelFactory.getModel(modelName);
       const Model = modelInfo.model;
       const populate = modelInfo.populate;
 
-      let itemKeys = Object.keys(params);
-      let itemValues = Object.values(params);
-
       let populateTags = populateItems(populate);
-      
-      let items = await Model.find({})
-      .deepPopulate(populateTags).lean();
 
-      items = items.filter((m) => {
-        let validate = true;
+      let item
 
-        for (let index = 0; index < itemKeys.length; index++) {
-          const it = itemKeys[index];
-
-          let itemToSearch = getSubItem(m,it);
-
-          validate =
-            validate &&
-            itemToSearch &&
-            itemToSearch.toString().includes(itemValues[index]);
-        }
-
-        return validate;
-      });
-
-      if(fields){
-        items = commonHelper.getArrayPickingParams(items, fields)
+      if(fieldParams){
+        let fieldParamsParsed = formatFieldParams(fieldParams)
+        item = await Model.find(params).deepPopulate(populateTags).select(fieldParamsParsed).lean();
+      }else{
+        item = await Model.find(params).deepPopulate(populateTags).lean();
       }
-      cache.set(cacheKey, items);
+   
+      if(fieldParams){
+        cache.set(`${modelName}:${paramsParsed}:${fieldParams}`, item);
+      }
+      else{
+        cache.set(`${modelName}:${paramsParsed}`, item);
+      }
 
-      return items;
+      return item;
     } catch (error) {
       logger.error(`db:index:findByItems: ${error}`)
       throw error;
     }
   }
-  async function getItems(modelName, fields) {
+
+ async function getItems(modelName, fieldParams) {
     try {
-      logger.info(`db:index:getItems: ${modelName}`)
       const modelInfo = ModelFactory.getModel(modelName);
 
-      let cacheKey
-      if(fields){
-        cacheKey = `${modelName}:${fields.toString()}`
-      }else{
-        cacheKey = `${modelName}`
-      }
+      let cachedItem;
 
-      const cachedItem = await cache.get(cacheKey)
-      if (cachedItem)
-        return JSON.parse(cachedItem)
+      if(fieldParams){
+        cachedItem = await cache.get(`${modelName}:${fieldParams}`);
+        if(cachedItem)return JSON.parse(cachedItem)
+      }else{
+        cachedItem = await cache.get(`${modelName}`);
+        if (cachedItem){
+          let  cacheParsed = JSON.parse(cachedItem);
+          if(fieldParams){
+            let fieldParamsParsed = formatFieldParams(fieldParams)
+            cacheParsed = cacheParsed.map((m)=>{
+              const item = {}
+  
+              fieldParamsParsed.forEach(field => {
+                item[field] = m[field]
+              });
+              return item
+            })
+
+            cache.set(`${modelName}:${fieldParams}`, cacheParsed);
+            return cacheParsed
+
+          }else{
+            return cacheParsed
+          }
+        }
+      }
 
       const Model = modelInfo.model;
       const populate = modelInfo.populate;
 
+      
       let populateTags = populateItems(populate);
-      let items = await Model.find().deepPopulate(populateTags).lean();
-
+      let items 
+      
+      if(fieldParams){
+        let fieldParamsParsed = formatFieldParams(fieldParams)
+        items = await Model.find().populate(populateTags).select(fieldParamsParsed);
+      }
+      else{
+        items = await Model.find().populate(populateTags);
+      }
+      
       if (items && items.length > 0) {
         cache.set(`${modelName}`, items);
-
-        if(fields){
-          items = commonHelper.getArrayPickingParams(items, fields)
-        }
-        cache.set(cacheKey, items)
-
         return items;
       } else {
         return null;
