@@ -54,7 +54,7 @@ module.exports = function makeModelGenericEndpointHandler({
   }
 
   function formatFieldsParams(fields){
-    return fields.split(",")
+    return fields.replace(/ /g,'').split(",")
   }
 
 

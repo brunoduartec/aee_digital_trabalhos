@@ -11,19 +11,6 @@ module.exports = function makeModelGenericList({ database, modelName }) {
     update,
   });
 
-  function formatOutput(items) {
-    if (items) {
-      if (items.length > 0) {
-        items.forEach((item) => {
-          item["ID"] = item["_id"];
-          delete item._id
-        });
-      }
-    }
-
-    return items;
-  }
-
   async function add(model_genericInfo) {
     try {
       let model_generic = makeModelGeneric(model_genericInfo, modelName);
@@ -42,8 +29,6 @@ module.exports = function makeModelGenericList({ database, modelName }) {
         searchParams,
         fields
       );
-
-      model_generic_info = formatOutput(model_generic_info);
       return model_generic_info;
     } catch (error) {
       logger.error(`model_generic:model_generic-list:findByItems: ${error}`)
@@ -54,7 +39,7 @@ module.exports = function makeModelGenericList({ database, modelName }) {
     try {
       let items = await database.getItems(modelName, fields);
 
-      let model_generics_info = formatOutput(items);
+      let model_generics_info = items;
       return model_generics_info;
     } catch (error) {
       logger.error(`model_generic:model_generic-list:getItems: ${error}`)
