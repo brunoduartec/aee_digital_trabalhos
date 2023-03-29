@@ -1,42 +1,52 @@
 const { createLogger, format, transports } = require('winston');
-const envconfig = require("./envconfig")
-const env = envconfig.NODE_ENV;
+const { combine, timestamp, printf } = format;
 
-const config = require("../env.json")[env];
+const DailyRotateFile = require('winston-daily-rotate-file');
 
-const mongoConfig = config.mongo;
-const connection = `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}`;
+// module.exports = logger;
 
-// Import mongodb
-require('winston-mongodb');
+module.exports = class Logger{
+  constructor(service_name="aee_digital_trabalhos"){
+    const instance = this
+    const myFormat = printf(({ level, message, label, timestamp, ...metadata }) => {
+      const log = {
+        '@timestamp': timestamp,
+        level,
+        correlationId:instance.correlationId,
+        message,
+        metadata:{...metadata}
+      };
+      return JSON.stringify(log);
+    });
+    this.logger = createLogger({
+      format: combine(
+        timestamp(),
+        myFormat
+      ),
+      defaultMeta: { service: service_name },
+      transports: [
+        new transports.Console(),
+        new DailyRotateFile({
+          filename: `logs/${service_name}/%DATE%.log`,
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: true,
+          maxFiles: '90d'
+        })
+      ]
+    });
+  }
 
-module.exports = createLogger({
-transports:[
+  setCorrelation(correlationId){
+    this.correlationId = correlationId
+  }
 
-// File transport
-    new transports.File({
-    filename: 'logs/server.log',
-    format:format.combine(
-        format.timestamp({format: 'MMM-DD-YYYY HH:mm:ss'}),
-        format.align(),
-        format.printf(info => `${info.level}: ${[info.timestamp]}: ${info.message}`),
-)}),
-
-// MongoDB transport
-    new transports.MongoDB({
-        level: 'error',
-        //mongo database connection link
-        db : connection,
-        options: {
-            useUnifiedTopology: true
-        },
-        // A collection to save json formatted logs
-        collection: 'server_logs',
-        cappedMax: 100,
-        capped: true,
-        format: format.combine(
-        format.timestamp(),
-        // Convert logs to a json format
-        format.json())
-    })]
-});
+  info(data, ...metadata){
+    this.logger.info(data, ...metadata);
+  }
+  debug(data, ...metadata){
+    this.logger.debug(data, ...metadata)
+  }
+  error(data, ...metadata){
+    this.logger.error(data, ...metadata)
+  }
+}

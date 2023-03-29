@@ -1,8 +1,4 @@
 var mongodb = require('mongodb');
-const logger = require("../helpers/logger");
-
-const commonHelper = require("../helpers/common.helper")
-
 
 const Cache = require("../helpers/cache");
 const cache = new Cache();
@@ -29,7 +25,7 @@ module.exports = function makeDb(ModelFactory) {
     return paramsParsed
   }
 
-  function formatParams(searchParams) {
+  function formatParams(searchParams, logger) {
     try {
       let items = Object.keys(searchParams);
       let values = Object.values(searchParams);
@@ -58,7 +54,7 @@ module.exports = function makeDb(ModelFactory) {
     }
   }
 
-  function getParamsParsed(params) {
+  function getParamsParsed(params, logger) {
     let paramsParsed = "";
   
     let keys = Object.keys(params);
@@ -77,7 +73,7 @@ module.exports = function makeDb(ModelFactory) {
     return paramsParsed.substring(1);
   }
 
-  function populateItems(populateInfo) {
+  function populateItems(populateInfo, logger) {
     try {
       let populateConcatTrimed;
       if (populateInfo && populateInfo.length > 0) {
@@ -102,7 +98,6 @@ module.exports = function makeDb(ModelFactory) {
 
   async function solveItem(item, schemaObj) {
     try {
-      logger.info(`db:index:solveItem: ${item} : ${schemaObj}`)
       if (schemaObj.ref) {
         const ref = schemaObj.ref;
         if (typeof item === 'object') {
@@ -116,7 +111,6 @@ module.exports = function makeDb(ModelFactory) {
       return item;
       
     } catch (error) {
-      logger.error(`db:index:solveItem ${error}`)
       throw error
     }
   }
@@ -128,7 +122,6 @@ module.exports = function makeDb(ModelFactory) {
 
   async function traverser(schemaObj, item) {
     try {
-      logger.info(`db:index:traverser: ${item} : ${schemaObj}`)
       let parsedItems = {};
       if (checkNotEnd(schemaObj)) {
         if (Array.isArray(schemaObj)) {
@@ -156,12 +149,11 @@ module.exports = function makeDb(ModelFactory) {
       return parsedItems;
       
     } catch (error) {
-      logger.error(`db:index:traverser ${error}`)
       throw error
     }
   }
 
-  async function add(modelName, itemInfo) {
+  async function add(modelName, itemInfo, logger) {
     try {
       logger.info(`db:index:add: ${modelName} : ${itemInfo}`)
       if (typeof itemInfo != 'object')
@@ -185,7 +177,6 @@ module.exports = function makeDb(ModelFactory) {
 
   function getSubItem(m, queryParam) {
     try {
-      logger.info(`db:index:getSubItem: ${JSON.stringify(m)} : ${queryParam}`)
       let paramsSplited = queryParam.split(".");
   
       let itemToSearch = m[paramsSplited[0]];
@@ -196,12 +187,11 @@ module.exports = function makeDb(ModelFactory) {
       return itemToSearch
       
     } catch (error) {
-      logger.error(`db:index:getSubItem: ${error}`)
       throw error;
     }
   }
 
-  async function findByItems(modelName, params, fieldParams) {
+  async function findByItems(modelName, params, fieldParams, logger) {
     try {
       logger.info(`db:index:findByItems: ${modelName} : ${params}`)
 
@@ -264,7 +254,7 @@ module.exports = function makeDb(ModelFactory) {
     }
   }
 
- async function getItems(modelName, fieldParams) {
+ async function getItems(modelName, fieldParams, logger) {
     try {
       const modelInfo = ModelFactory.getModel(modelName);
 

@@ -1,18 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const correlationId = require('express-correlation-id');
+
 const cors = require("cors");
 
 require("./db/connection")();
 
 const Cache = require("./helpers/cache");
 const cache = new Cache();
-(async function () {
-  await cache.connect();
-})()
 
 const ModelFactory = require("./db/modelFactory");
 
-const logger = require("./helpers/logger");
+const Logger = require("./helpers/logger");
+const logger = new Logger();
+
+app.use(correlationId());
 
 const models = [
   "atividade_centro_summary",
@@ -42,7 +44,6 @@ const app = express();
 app.options("*", cors()); // include before other routes
 
 app.use((req, res, next) => {
-  logger.info(`Acessou o Middleware! ${req}`);
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",

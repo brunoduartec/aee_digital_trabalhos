@@ -3,7 +3,9 @@ const env = envconfig.NODE_ENV;
 const config = require("../env.json")[env];
 
 const mongoConfig = config.mongo;
-const logger = require("../helpers/logger");
+const Logger = require("../helpers/logger");
+const logger = new Logger();
+
 const mongoose = require("mongoose");
 const connection = `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}`;
 

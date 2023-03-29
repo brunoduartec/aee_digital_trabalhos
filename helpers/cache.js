@@ -1,56 +1,88 @@
-const envconfig = require("../helpers/envconfig")
-const env = envconfig.NODE_ENV;
-
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("../env.json")[env];
 const redisConf = config.redis
 
-const logger = require("./logger");
+const Logger = require("./logger");
+const logger = new Logger();
+
 
 const redis = require("redis")
 
-module.exports = class Cache{
-    constructor(){
 
-        if(this.constructor.instance)
+module.exports = class Cache {
+    constructor() {
+
+        if (this.constructor.instance)
             return this.constructor.instance
 
         this.constructor.instance = this;
-        this.client = redis.createClient({ url: `redis://${redisConf.host}:${redisConf.port}` });
+        this.client = redis.createClient({
+            url: `redis://${redisConf.host}:${redisConf.port}`
+        });
+
+        this.client.on('connect', () => {
+            logger.info('Redis is connected');
+        });
+        this.client.on('error', (err) => {
+            logger.error(`Error Connecting to Redis: ${err}`);
+        });
+
+        this.client.connect();
     }
 
-    async connect(){
+    async connect() {
         try {
             await this.client.connect();
             logger.info("Redis is connected")
-            
+
         } catch (error) {
             logger.error(`Error Connecting to Redis: ${error}`)
-            await setTimeout(connect, 5000);
+            await setTimeout(instance.connect, 5000);
         }
     }
 
-    async get(key){
-        const value = await this.client.get(key);
-        return value;
+    async get(key) {
+        try {
+            const value = await this.client.get(key);
+            return value;
+        } catch (error) {
+            throw error
+        }
+
     }
 
-    async set(key,value){
-        await this.client.set(key, JSON.stringify(value), {
-            EX: 5*60,
-            NX: true
-          });
+    async set(key, value) {
+        try {
+            await this.client.set(key, JSON.stringify(value), {
+                EX: 24 * 60 * 60,
+                NX: true
+            });
+        } catch (error) {
+            throw error
+        }
+
     }
 
-    async keys(keyPattern){
-        const keys = await this.client.keys(keyPattern)
-        return keys
+    async keys(keyPattern) {
+        try {
+            const keys = await this.client.keys(keyPattern)
+            return keys
+        } catch (error) {
+            throw error
+        }
+
     }
 
-    async remove(pattern){
-        let keys = await this.client.keys(pattern)
+    async remove(pattern) {
+        try {
+            let keys = await this.client.keys(pattern)
 
-        for (const key of keys) {
-            this.client.expire(key,0);
+            for (const key of keys) {
+                this.client.expire(key, 0);
+            }
+
+        } catch (error) {
+            throw error
         }
     }
 
