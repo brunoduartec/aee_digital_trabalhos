@@ -4,7 +4,7 @@ const config = require("../env.json")[env];
 const mongoConfig = config.mongo;
 
 const mongoose = require("mongoose");
-const connection = "mongodb+srv://aliancadigital:aliancadigital@aee.pvgzm2s.mongodb.net/";
+const connection = process.env.DB_STRING_CONNECTION;
 
 let hasConnected = false;
 
