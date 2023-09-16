@@ -1,28 +1,30 @@
-const envconfig = require("../helpers/envconfig")
-const env = envconfig.NODE_ENV;
+const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("../env.json")[env];
 
-const mongoConfig = config.mongo;
-const logger = require("../helpers/logger");
-const mongoose = require("mongoose");
-const connection = `mongodb://${mongoConfig.host}:${mongoConfig.port}/${mongoConfig.database}`;
+mongoConfig = config.mongo;
 
-let hasConnected = false;
+const mongoose = require("mongoose");
+const connection = process.env.DB_STRING_CONNECTION;
+
+hasConnected = false;
 
 const connectWithRetry = (callback) => {
   if (hasConnected) return;
-  logger.info("MongoDB connection with retry");
+  console.log("MongoDB connection with retry");
   mongoose
     .connect(connection, mongoConfig.options)
     .then(() => {
-      logger.info("MongoDB is connected");
+      console.log("MongoDB is connected");
       hasConnected = true;
       if (callback) {
         callback();
       }
     })
     .catch((err) => {
-      logger.error( `MongoDB connection unsuccessful, retry after 5 seconds.: ${err}` );
+      console.log(
+        "MongoDB connection unsuccessful, retry after 5 seconds.",
+        err
+      );
       setTimeout(connectWithRetry, 5000);
     });
 };

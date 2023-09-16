@@ -1,47 +1,23 @@
-version: "3.5"
-
 services:
   aee_digital_trabalhos:
     environment:
       - NODE_ENV=development
+      - DB_STRING_CONNECTION=${DB_STRING_CONNECTION}
+      - PORT=${PORT}
     build: .
     command: npm start
-    image: docker.pkg.github.com/brunoduartec/aee_digital_trabalhos
+    image: aee_digital_trabalhos
     container_name: aee_digital_trabalhos
     ports:
-      - "3100:3100"
+      - "${PORT}:${PORT}"
     networks:
       - aee_digital_backend
-      - aee_trabalho_db
     volumes:
       - .:/usr/app
     depends_on:
-      - "mongo"
       - "redis"
     links:
-      - mongo
       - redis
-    restart: always
-  mongo:
-    image: mongo:5.0.10
-    volumes:
-      - ./data/db:/data/db
-    ports:
-      - "3110:27017"
-    networks:
-      - aee_trabalho_db
-    restart: always
-  mongo-express:
-    image: mongo-express
-    environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo
-      - ME_CONFIG_MONGODB_PORT=27017
-    depends_on:
-      - mongo
-    ports:
-      - "30101:8081"
-    networks:
-      - aee_trabalho_db
     restart: always
   redis:
     image: redis
@@ -67,7 +43,3 @@ services:
 networks:
   aee_digital_backend:
     name: aee_digital_backend
-    driver: bridge
-  aee_trabalho_db:
-    name: aee_trabalho_db
-    driver: bridge
