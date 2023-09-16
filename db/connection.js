@@ -1,12 +1,12 @@
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : "local";
 const config = require("../env.json")[env];
 
-mongoConfig = config.mongo;
+const mongoConfig = config.mongo;
 
 const mongoose = require("mongoose");
-const connection = process.env.DB_STRING_CONNECTION;
+const connection = "mongodb+srv://aliancadigital:aliancadigital@aee.pvgzm2s.mongodb.net/";
 
-hasConnected = false;
+let hasConnected = false;
 
 const connectWithRetry = (callback) => {
   if (hasConnected) return;

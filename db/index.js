@@ -1,4 +1,4 @@
-var mongodb = require('mongodb');
+// var mongodb = require('mongodb');
 const logger = require("../helpers/logger");
 
 const commonHelper = require("../helpers/common.helper")
@@ -28,35 +28,56 @@ module.exports = function makeDb(ModelFactory) {
 
     return paramsParsed
   }
-
   function formatParams(searchParams) {
-    try {
-      let items = Object.keys(searchParams);
-      let values = Object.values(searchParams);
-  
-      searchParams = {};
-      for (let index = 0; index < items.length; index++) {
-        let item = items[index];
-        const value = values[index];
-        if (item == "ID") {
-          item = "_id";
-        }
-  
-        if (item.toLocaleLowerCase().includes("_id")) {
-          searchParams[item] = new mongodb.ObjectID(value.toString());
-        } else {
-          searchParams[item] = {
-            $regex: value
-          };
-        }
+    let items = Object.keys(searchParams);
+    let values = Object.values(searchParams);
+
+    searchParams = {};
+    for (let index = 0; index < items.length; index++) {
+      let item = items[index];
+      const value = values[index];
+      if (item == "ID" || item == "id") {
+        item = "_id";
       }
-      logger.info(`Parsed: db:index:formatParams: ${searchParams}`)
-      return searchParams;
-    } catch (error) {
-      logger.error(`db:index:formatParams ${error}`)
-      throw error
+
+      if (item.toLocaleLowerCase().includes("_id")) {
+        searchParams[item] = value;
+      } else {
+        searchParams[item] = { $regex: value };
+      }
     }
+
+    return searchParams;
   }
+
+  // function formatParams(searchParams) {
+  //   try {
+  //     let items = Object.keys(searchParams);
+  //     let values = Object.values(searchParams);
+  
+  //     searchParams = {};
+  //     for (let index = 0; index < items.length; index++) {
+  //       let item = items[index];
+  //       const value = values[index];
+  //       if (item == "ID") {
+  //         item = "_id";
+  //       }
+  
+  //       if (item.toLocaleLowerCase().includes("_id")) {
+  //         searchParams[item] = new mongodb.ObjectID(value.toString());
+  //       } else {
+  //         searchParams[item] = {
+  //           $regex: value
+  //         };
+  //       }
+  //     }
+  //     logger.info(`Parsed: db:index:formatParams: ${searchParams}`)
+  //     return searchParams;
+  //   } catch (error) {
+  //     logger.error(`db:index:formatParams ${error}`)
+  //     throw error
+  //   }
+  // }
 
   function getParamsParsed(params) {
     let paramsParsed = "";
